@@ -1,0 +1,2522 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI 첫걸음 8시간 — 스크래치 &amp; 파이썬으로 배우는 인공지능</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@600;900&family=IBM+Plex+Mono:wght@500&display=swap" rel="stylesheet">
+<link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<style>
+:root{
+  --navy:#0F2A52;        /* 잉크 네이비 */
+  --knu:#1B4FA0;         /* 캠퍼스 블루 */
+  --sky:#EAF2FC;         /* 여름 하늘 배경 */
+  --gold:#F2A93B;        /* 하이라이트 골드 */
+  --teal:#0E8C7F;        /* 실습 그린 */
+  --ink:#1C2434;
+  --sub:#5A6578;
+  --line:#D8E2F0;
+  --card:#FFFFFF;
+  --radius:14px;
+  --mono:'IBM Plex Mono', monospace;
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{font-family:'Pretendard Variable',Pretendard,-apple-system,sans-serif;background:var(--sky);color:var(--ink);line-height:1.65;-webkit-font-smoothing:antialiased}
+.serif{font-family:'Noto Serif KR',serif}
+
+/* ── 헤더 ── */
+.hero{background:linear-gradient(160deg,#0F2A52 0%,#173C74 55%,#1B4FA0 100%);color:#fff;padding:56px 20px 96px;position:relative;overflow:hidden}
+.hero::after{content:"";position:absolute;right:-120px;top:-120px;width:420px;height:420px;border-radius:50%;background:radial-gradient(circle,rgba(242,169,59,.28),transparent 65%)}
+.hero-inner{max-width:1060px;margin:0 auto;position:relative;z-index:1}
+.hero .eyebrow{display:inline-flex;align-items:center;gap:8px;font-size:13px;letter-spacing:.14em;font-weight:700;color:#BFD4F5;border:1px solid rgba(255,255,255,.28);padding:6px 14px;border-radius:999px;margin-bottom:22px}
+.hero h1{font-family:'Noto Serif KR',serif;font-weight:900;font-size:clamp(30px,5vw,52px);line-height:1.22;letter-spacing:-.01em}
+.hero h1 .accent{color:var(--gold)}
+.hero .sub{margin-top:16px;font-size:clamp(15px,2vw,18px);color:#D7E4F8;max-width:640px}
+.hero .meta{display:flex;flex-wrap:wrap;gap:10px;margin-top:28px}
+.hero .meta span{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);padding:8px 16px;border-radius:10px;font-size:14px;font-weight:600}
+
+/* ── 탭 내비 ── */
+.tabs{position:sticky;top:0;z-index:50;background:rgba(255,255,255,.92);backdrop-filter:blur(10px);border-bottom:1px solid var(--line);margin-top:-52px}
+.tabs-inner{max-width:1060px;margin:0 auto;display:flex;gap:4px;overflow-x:auto;padding:10px 16px;scrollbar-width:none}
+.tabs-inner::-webkit-scrollbar{display:none}
+.tab-btn{flex-shrink:0;border:none;background:transparent;padding:10px 18px;border-radius:10px;font-size:15px;font-weight:700;color:var(--sub);cursor:pointer;transition:.18s;font-family:inherit}
+.tab-btn:hover{background:var(--sky);color:var(--knu)}
+.tab-btn.active{background:var(--navy);color:#fff}
+.tab-btn:focus-visible{outline:2px solid var(--gold);outline-offset:2px}
+
+main{max-width:1060px;margin:0 auto;padding:40px 20px 90px}
+.panel{display:none;animation:fade .35s ease}
+.panel.active{display:block}
+@keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+
+h2.sec{font-family:'Noto Serif KR',serif;font-weight:900;font-size:26px;color:var(--navy);margin:44px 0 8px;display:flex;align-items:center;gap:12px}
+h2.sec::before{content:"";width:10px;height:28px;background:var(--gold);border-radius:3px}
+h2.sec:first-child{margin-top:0}
+.sec-desc{color:var(--sub);font-size:15px;margin-bottom:20px}
+
+.card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:24px;margin-bottom:16px;box-shadow:0 1px 3px rgba(15,42,82,.05)}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+@media(max-width:760px){.grid2,.grid3{grid-template-columns:1fr}}
+
+.badge{display:inline-block;font-size:12px;font-weight:800;padding:3px 10px;border-radius:999px;letter-spacing:.02em}
+.b-blue{background:#E3ECFB;color:var(--knu)}
+.b-gold{background:#FDF1DC;color:#B07514}
+.b-teal{background:#DDF3F0;color:var(--teal)}
+.b-red{background:#FCE6E6;color:#C0392B}
+
+/* ── 시간표 ── */
+.tt{border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;background:#fff;margin-bottom:26px}
+.tt-row{display:grid;grid-template-columns:150px 1fr;border-top:1px solid var(--line)}
+.tt-row:first-child{border-top:none}
+.tt-time{background:var(--sky);padding:16px;font-family:var(--mono);font-size:13px;font-weight:600;color:var(--navy);display:flex;flex-direction:column;justify-content:center}
+.tt-time small{color:var(--sub);font-family:'Pretendard Variable',sans-serif;font-weight:500}
+.tt-body{padding:16px 20px}
+.tt-body h4{font-size:16.5px;font-weight:800;color:var(--ink);margin-bottom:4px}
+.tt-body p{font-size:14px;color:var(--sub)}
+.tt-lunch{background:#FDF6E8}
+.tt-lunch .tt-body h4{color:#B07514}
+@media(max-width:600px){.tt-row{grid-template-columns:1fr}.tt-time{flex-direction:row;gap:8px;padding:10px 16px}}
+
+/* ── 프롬프트 박스 ── */
+.pbox{background:#0F1A2E;border-radius:12px;margin:14px 0;overflow:hidden;border:1px solid #24344F}
+.pbox-head{display:flex;justify-content:space-between;align-items:center;padding:10px 16px;background:#16233C;border-bottom:1px solid #24344F}
+.pbox-head span{font-size:12.5px;font-weight:700;color:#8FB0DF;letter-spacing:.04em}
+.copy-btn{border:1px solid #3A5480;background:#1E3050;color:#CFE0F5;font-size:12.5px;font-weight:700;padding:6px 14px;border-radius:8px;cursor:pointer;transition:.15s;font-family:inherit;display:inline-flex;align-items:center;gap:6px}
+.copy-btn:hover{background:#2A4068;border-color:#5E7FB5}
+.copy-btn.done{background:var(--teal);border-color:var(--teal);color:#fff}
+.pbox pre{padding:16px 18px;font-family:var(--mono);font-size:13px;line-height:1.75;color:#E4EDF9;white-space:pre-wrap;word-break:break-word;max-height:340px;overflow-y:auto}
+
+/* ── 스텝 ── */
+.steps{counter-reset:st}
+.step{display:flex;gap:16px;padding:16px 0;border-bottom:1px dashed var(--line)}
+.step:last-child{border-bottom:none}
+.step::before{counter-increment:st;content:counter(st);flex-shrink:0;width:34px;height:34px;border-radius:10px;background:var(--navy);color:#fff;font-weight:800;font-size:15px;display:flex;align-items:center;justify-content:center}
+.step h5{font-size:15.5px;font-weight:800;margin-bottom:3px}
+.step p{font-size:14px;color:var(--sub)}
+
+/* ── 체크리스트 ── */
+.chk-wrap{margin-top:6px}
+.chk{display:flex;align-items:flex-start;gap:12px;padding:11px 14px;border:1px solid var(--line);border-radius:10px;margin-bottom:8px;cursor:pointer;background:#fff;transition:.15s;user-select:none}
+.chk:hover{border-color:var(--knu)}
+.chk input{margin-top:4px;width:17px;height:17px;accent-color:var(--knu);cursor:pointer}
+.chk.on{background:#F0F7EE;border-color:#8FBF88}
+.chk.on .chk-t{text-decoration:line-through;color:var(--sub)}
+.chk-t{font-size:14.5px;font-weight:600}
+.chk-d{font-size:13px;color:var(--sub)}
+.progress{height:12px;background:#E1E9F5;border-radius:999px;overflow:hidden;margin:10px 0 20px}
+.progress-bar{height:100%;background:linear-gradient(90deg,var(--knu),var(--teal));width:0%;transition:width .35s;border-radius:999px}
+.progress-label{font-size:13.5px;font-weight:700;color:var(--navy)}
+
+/* ── 학과 분포 ── */
+.dist{display:flex;flex-direction:column;gap:9px}
+.dist-row{display:grid;grid-template-columns:170px 1fr 40px;align-items:center;gap:12px;font-size:14px}
+.dist-name{font-weight:700}
+.dist-bar{height:20px;background:#E4EDF9;border-radius:6px;overflow:hidden}
+.dist-fill{height:100%;border-radius:6px;background:linear-gradient(90deg,var(--knu),#6C9BE0)}
+.dist-n{font-family:var(--mono);font-weight:600;color:var(--navy);text-align:right}
+@media(max-width:600px){.dist-row{grid-template-columns:120px 1fr 30px}}
+
+/* ── 필터 칩 ── */
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:22px}
+.chip{border:1.5px solid var(--line);background:#fff;padding:8px 16px;border-radius:999px;font-size:13.5px;font-weight:700;color:var(--sub);cursor:pointer;transition:.15s;font-family:inherit}
+.chip:hover{border-color:var(--knu);color:var(--knu)}
+.chip.active{background:var(--knu);border-color:var(--knu);color:#fff}
+.lib-card{border-left:4px solid var(--knu)}
+.lib-card h4{font-size:16px;font-weight:800;margin-bottom:2px}
+.lib-card .who{font-size:13px;color:var(--sub);margin-bottom:6px}
+
+/* ── 기능 사전 ── */
+.feat{border:1px solid var(--line);border-radius:var(--radius);background:#fff;margin-bottom:18px;overflow:hidden;box-shadow:0 1px 3px rgba(15,42,82,.05)}
+.feat-head{display:flex;align-items:center;gap:14px;padding:18px 22px;cursor:pointer;user-select:none;transition:.15s}
+.feat-head:hover{background:var(--sky)}
+.feat-icon{width:46px;height:46px;border-radius:13px;background:linear-gradient(145deg,var(--navy),var(--knu));display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0}
+.feat-head h3{font-size:17.5px;font-weight:800;color:var(--ink)}
+.feat-head .feat-one{font-size:13.5px;color:var(--sub);margin-top:1px}
+.feat-arrow{margin-left:auto;font-size:14px;color:var(--sub);transition:transform .2s;flex-shrink:0}
+.feat.open .feat-arrow{transform:rotate(180deg)}
+.feat-body{display:none;padding:0 22px 22px;border-top:1px dashed var(--line)}
+.feat.open .feat-body{display:block;animation:fade .3s ease}
+.feat-body h5{font-size:13px;font-weight:800;color:var(--knu);letter-spacing:.06em;margin:18px 0 6px}
+.feat-body .theory{font-size:14.5px;line-height:1.75}
+.when-tags{display:flex;flex-wrap:wrap;gap:7px}
+.when-tag{background:var(--sky);color:var(--navy);font-size:13px;font-weight:600;padding:6px 13px;border-radius:8px}
+.feat-note{background:#FDF6E8;border:1px solid #F0DDB4;border-radius:10px;padding:10px 14px;font-size:13.5px;margin-top:14px}
+.feat-note b{color:#B07514}
+.mini-badge{font-size:11.5px;font-weight:800;padding:3px 9px;border-radius:999px;margin-left:8px;vertical-align:2px}
+.feat-jump{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:22px}
+.feat-jump button{border:1.5px solid var(--line);background:#fff;padding:7px 14px;border-radius:999px;font-size:12.5px;font-weight:700;color:var(--sub);cursor:pointer;font-family:inherit;transition:.15s}
+.feat-jump button:hover{border-color:var(--knu);color:var(--knu)}
+
+/* ── 데모 프레임 ── */
+.demo-frame{border:1px solid var(--line);border-radius:14px;overflow:hidden;margin:16px 0;background:#fff}
+.demo-bar{display:flex;align-items:center;gap:8px;background:#F1F5FB;border-bottom:1px solid var(--line);padding:10px 14px}
+.demo-bar i{width:11px;height:11px;border-radius:50%;display:inline-block}
+.demo-bar .r{background:#F26D6D}.demo-bar .y{background:#F2C94C}.demo-bar .g{background:#6FCF97}
+.demo-bar span{font-size:12.5px;color:var(--sub);font-family:var(--mono);margin-left:6px}
+.demo-body{padding:26px 22px}
+
+/* ── 퀴즈 데모 ── */
+.qz{max-width:560px;margin:0 auto;text-align:center}
+.qz-progress{display:flex;gap:6px;justify-content:center;margin-bottom:18px}
+.qz-dot{width:34px;height:6px;border-radius:3px;background:#E1E9F5;transition:.2s}
+.qz-dot.cur{background:var(--gold)}
+.qz-dot.ok{background:var(--teal)}
+.qz-dot.no{background:#E36262}
+.qz-q{font-size:19px;font-weight:800;margin-bottom:20px;min-height:56px}
+.qz-opts{display:grid;gap:10px;text-align:left}
+.qz-opt{border:1.5px solid var(--line);border-radius:11px;padding:13px 16px;background:#fff;font-size:15px;font-weight:600;cursor:pointer;transition:.15s;font-family:inherit;text-align:left;width:100%}
+.qz-opt:hover:not(:disabled){border-color:var(--knu);background:var(--sky)}
+.qz-opt.right{border-color:var(--teal);background:#DDF3F0}
+.qz-opt.wrong{border-color:#E36262;background:#FCE6E6}
+.qz-opt:disabled{cursor:default}
+.qz-timer{font-family:var(--mono);font-size:14px;color:var(--sub);margin-bottom:10px}
+.qz-timer b{color:var(--navy)}
+.qz-result h3{font-family:'Noto Serif KR',serif;font-size:26px;color:var(--navy);margin-bottom:8px}
+.qz-result p{color:var(--sub);margin-bottom:18px}
+.btn{display:inline-flex;align-items:center;gap:8px;background:var(--navy);color:#fff;border:none;padding:12px 26px;border-radius:11px;font-size:15px;font-weight:800;cursor:pointer;transition:.18s;font-family:inherit}
+.btn:hover{background:var(--knu);transform:translateY(-1px)}
+.btn.ghost{background:#fff;color:var(--navy);border:1.5px solid var(--line)}
+.btn.ghost:hover{border-color:var(--knu);background:var(--sky)}
+.btn.teal{background:var(--teal)}
+.btn.teal:hover{background:#0B7568}
+
+/* ── 대시보드 데모 ── */
+.dash-kpis{display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px}
+@media(max-width:640px){.dash-kpis{grid-template-columns:repeat(2,1fr)}}
+.kpi{background:var(--sky);border-radius:12px;padding:14px 16px;text-align:center}
+.kpi b{display:block;font-size:24px;font-weight:800;color:var(--navy);font-family:var(--mono)}
+.kpi span{font-size:12.5px;color:var(--sub);font-weight:600}
+.bars{display:flex;align-items:flex-end;gap:8px;height:170px;padding:0 4px;border-bottom:2px solid var(--line);margin-bottom:6px}
+.barcol{flex:1;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:5px;height:100%}
+.bar{width:100%;max-width:44px;border-radius:6px 6px 0 0;background:linear-gradient(180deg,#5C8EDC,var(--knu));transition:height .5s;position:relative}
+.bar.warn{background:linear-gradient(180deg,#F0A85C,#DD7A2C)}
+.bar-v{font-family:var(--mono);font-size:11px;color:var(--navy);font-weight:600}
+.bar-names{display:flex;gap:8px;padding:0 4px}
+.bar-name{flex:1;max-width:100%;text-align:center;font-size:11px;color:var(--sub);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.dash-input{width:100%;font-family:var(--mono);font-size:13px;border:1.5px solid var(--line);border-radius:10px;padding:12px;min-height:96px;resize:vertical;margin:8px 0}
+.dash-input:focus{outline:none;border-color:var(--knu)}
+.risk-list{margin-top:14px;display:flex;flex-wrap:wrap;gap:8px}
+.risk-tag{background:#FCE6E6;color:#C0392B;font-size:13px;font-weight:700;padding:5px 12px;border-radius:8px}
+
+/* ── 기획 워크시트 ── */
+.ws label{display:block;font-size:13.5px;font-weight:800;color:var(--navy);margin:14px 0 5px}
+.ws input,.ws textarea,.ws select{width:100%;border:1.5px solid var(--line);border-radius:10px;padding:11px 13px;font-size:14.5px;font-family:inherit;background:#fff}
+.ws input:focus,.ws textarea:focus,.ws select:focus{outline:none;border-color:var(--knu)}
+.ws textarea{min-height:70px;resize:vertical}
+.hint{font-size:12.5px;color:#96A2B8;margin-top:3px}
+
+.note{background:#FDF6E8;border:1px solid #F0DDB4;border-radius:12px;padding:14px 18px;font-size:14px;margin:14px 0}
+.note b{color:#B07514}
+.tip{background:#E8F4F2;border:1px solid #BCE0DB;border-radius:12px;padding:14px 18px;font-size:14px;margin:14px 0}
+.tip b{color:var(--teal)}
+
+footer{background:var(--navy);color:#9DB4D8;text-align:center;padding:34px 20px;font-size:13.5px}
+footer b{color:#fff}
+.toast{position:fixed;bottom:26px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--navy);color:#fff;padding:12px 24px;border-radius:11px;font-size:14px;font-weight:700;opacity:0;transition:.3s;z-index:99;box-shadow:0 8px 24px rgba(15,42,82,.3)}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+table.simple{width:100%;border-collapse:collapse;font-size:14px}
+table.simple th{background:var(--sky);color:var(--navy);font-weight:800;padding:10px 12px;text-align:left;border:1px solid var(--line)}
+table.simple td{padding:10px 12px;border:1px solid var(--line)}
+@media (prefers-reduced-motion: reduce){*{animation:none!important;transition:none!important}}
+
+/* ══════ 8차시 과정용 추가 컴포넌트 ══════ */
+:root{--scratch:#F5A623;--python:#3776AB;--py-bg:#1B2B3A}
+
+/* 차시 헤더 */
+.les-head{background:linear-gradient(135deg,#0F2A52,#1B4FA0);color:#fff;border-radius:16px;padding:26px 28px;margin-bottom:24px;position:relative;overflow:hidden}
+.les-head::after{content:"";position:absolute;right:-60px;top:-60px;width:220px;height:220px;border-radius:50%;background:radial-gradient(circle,rgba(242,169,59,.25),transparent 65%)}
+.les-head .no{display:inline-block;font-family:var(--mono);font-size:12.5px;letter-spacing:.16em;color:#F2A93B;font-weight:700;margin-bottom:8px}
+.les-head h2{font-family:'Noto Serif KR',serif;font-size:clamp(22px,3.4vw,30px);font-weight:900;line-height:1.3;position:relative;z-index:1}
+.les-head p{margin-top:10px;font-size:14.5px;color:#D7E4F8;max-width:720px;position:relative;z-index:1}
+.les-head .hm{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px;position:relative;z-index:1}
+.les-head .hm span{background:rgba(255,255,255,.13);border:1px solid rgba(255,255,255,.22);padding:6px 13px;border-radius:9px;font-size:13px;font-weight:600}
+
+/* 학습목표 */
+.goals{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:8px}
+@media(max-width:760px){.goals{grid-template-columns:1fr}}
+.goal{background:#fff;border:1px solid var(--line);border-left:4px solid var(--gold);border-radius:12px;padding:15px 17px}
+.goal b{display:block;font-size:11.5px;letter-spacing:.1em;color:#B07514;font-weight:800;margin-bottom:5px}
+.goal p{font-size:14px;font-weight:600;line-height:1.55}
+
+/* 트랙(스크래치/파이썬) */
+.track{border-radius:14px;border:1px solid var(--line);background:#fff;margin-bottom:16px;overflow:hidden;box-shadow:0 1px 3px rgba(15,42,82,.05)}
+.track-head{display:flex;align-items:center;gap:12px;padding:15px 22px;font-weight:800;font-size:16.5px;color:#fff}
+.track-head .ico{width:34px;height:34px;border-radius:10px;background:rgba(255,255,255,.2);display:flex;align-items:center;justify-content:center;font-size:18px}
+.track-head small{margin-left:auto;font-weight:600;font-size:12.5px;opacity:.85;font-family:var(--mono)}
+.track.scr .track-head{background:linear-gradient(100deg,#E2921A,#F5A623)}
+.track.py .track-head{background:linear-gradient(100deg,#2C5F8A,#3776AB)}
+.track.th .track-head{background:linear-gradient(100deg,#0F2A52,#1B4FA0)}
+.track-body{padding:20px 22px}
+.track-body>*:last-child{margin-bottom:0}
+
+/* 스크래치 블록 */
+.blocks{background:#F3F6FB;border:1px solid var(--line);border-radius:12px;padding:16px;margin:12px 0}
+.blk{display:inline-flex;align-items:center;gap:6px;color:#fff;font-size:13.5px;font-weight:700;padding:8px 14px;border-radius:8px;margin:4px 5px 4px 0;box-shadow:0 2px 0 rgba(0,0,0,.14);line-height:1.4}
+.blk.ev{background:#FFBF00;color:#4A3200}
+.blk.mo{background:#4C97FF}
+.blk.lk{background:#9966FF}
+.blk.ct{background:#FFAB19;color:#4A3200}
+.blk.op{background:#59C059}
+.blk.va{background:#FF8C1A}
+.blk.sen{background:#5CB1D6}
+.blk.ml{background:#00A3A3}
+.blk .slot{background:rgba(255,255,255,.85);color:#22344B;border-radius:20px;padding:2px 9px;font-size:12.5px;font-weight:700}
+.blk-row{display:flex;flex-wrap:wrap;align-items:center;gap:2px}
+.blk-in{margin-left:26px;border-left:3px dashed #C3D2E6;padding-left:12px}
+.blk-cap{font-size:12.5px;color:var(--sub);font-weight:700;margin:10px 0 2px;letter-spacing:.03em}
+
+/* 파이썬 코드 박스 */
+.cbox{background:var(--py-bg);border-radius:12px;margin:14px 0;overflow:hidden;border:1px solid #2C4358}
+.cbox-head{display:flex;justify-content:space-between;align-items:center;padding:10px 16px;background:#22384C;border-bottom:1px solid #2C4358;gap:10px}
+.cbox-head span{font-size:12.5px;font-weight:700;color:#9CC7E8;letter-spacing:.03em}
+.cbox pre{padding:16px 18px;font-family:var(--mono);font-size:12.5px;line-height:1.75;color:#E8F1F8;white-space:pre;overflow-x:auto;max-height:460px;overflow-y:auto}
+.cbox pre .cm{color:#7FA8C4}
+.cbox pre .kw{color:#F2A93B}
+.cbox pre .st{color:#8FD9A8}
+.out{background:#0B1622;border-top:1px solid #2C4358;padding:12px 18px;font-family:var(--mono);font-size:12px;line-height:1.7;color:#9FE0B8;white-space:pre-wrap}
+.out b{color:#F2A93B;display:block;margin-bottom:5px;font-size:11px;letter-spacing:.1em}
+
+/* 연표 */
+.tl{position:relative;padding-left:26px;margin:8px 0}
+.tl::before{content:"";position:absolute;left:7px;top:6px;bottom:6px;width:3px;background:linear-gradient(180deg,var(--knu),var(--teal));border-radius:2px}
+.tl-item{position:relative;padding:0 0 20px 4px}
+.tl-item::before{content:"";position:absolute;left:-24px;top:5px;width:13px;height:13px;border-radius:50%;background:#fff;border:3px solid var(--knu)}
+.tl-item.hot::before{border-color:var(--gold);background:var(--gold)}
+.tl-yr{font-family:var(--mono);font-size:13px;font-weight:700;color:var(--knu)}
+.tl-t{font-size:15.5px;font-weight:800;margin:1px 0 3px}
+.tl-d{font-size:13.5px;color:var(--sub);line-height:1.6}
+
+/* 비유 박스 */
+.ana{background:linear-gradient(135deg,#FFF9EE,#FDF1DC);border:1px solid #F0DDB4;border-radius:13px;padding:16px 20px;margin:14px 0}
+.ana h5{font-size:14.5px;font-weight:800;color:#B07514;margin-bottom:6px}
+.ana p{font-size:14.5px;line-height:1.75}
+
+/* 픽셀 그림판 */
+.pixwrap{display:flex;gap:20px;flex-wrap:wrap;align-items:flex-start;justify-content:center}
+.pixgrid{display:grid;grid-template-columns:repeat(8,34px);gap:2px}
+.px{width:34px;height:34px;border-radius:4px;background:#fff;border:1px solid #DCE6F4;cursor:pointer;transition:.08s}
+.px:hover{border-color:var(--knu)}
+.pixmat{font-family:var(--mono);font-size:12px;line-height:1.55;background:#0F1A2E;color:#9FE0B8;padding:14px 16px;border-radius:11px;white-space:pre;overflow-x:auto}
+.conv-out{display:grid;grid-template-columns:repeat(6,34px);gap:2px}
+.cv{width:34px;height:34px;border-radius:4px;display:flex;align-items:center;justify-content:center;font-family:var(--mono);font-size:10px;font-weight:700;color:#fff}
+
+/* 다음 단어 예측 */
+.ngram-out{background:#0F1A2E;color:#E4EDF9;border-radius:11px;padding:15px 17px;font-size:15px;line-height:1.9;min-height:70px}
+.ngram-out .pick{color:#F2A93B;font-weight:800}
+.cands{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.cand{border:1.5px solid var(--line);background:#fff;border-radius:9px;padding:8px 14px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;transition:.15s}
+.cand:hover{border-color:var(--knu);background:var(--sky)}
+.cand b{color:var(--knu);font-family:var(--mono);font-size:12px;margin-left:6px}
+
+/* 회귀 슬라이더 */
+.reg{display:flex;flex-direction:column;gap:10px}
+.reg-svg{width:100%;height:264px;background:#F7FAFE;border:1px solid var(--line);border-radius:12px}
+.reg-ctl{display:grid;grid-template-columns:110px 1fr 70px;gap:10px;align-items:center;font-size:14px;font-weight:700}
+.reg-ctl input[type=range]{width:100%;accent-color:var(--knu)}
+.reg-ctl .val{font-family:var(--mono);color:var(--navy);text-align:right}
+.loss{font-size:15px;font-weight:800;text-align:center;padding:10px;border-radius:10px;background:var(--sky);color:var(--navy)}
+
+/* 분류 시뮬레이터 */
+.sim-row{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+@media(max-width:700px){.sim-row{grid-template-columns:1fr}}
+.sim-box{border:1.5px solid var(--line);border-radius:12px;padding:14px}
+.sim-box h6{font-size:13.5px;font-weight:800;margin-bottom:8px}
+.sim-box.a{border-color:#8FBF88;background:#F3FAF2}
+.sim-box.b{border-color:#E8A5A5;background:#FDF4F4}
+.sim-box textarea{width:100%;border:1px solid var(--line);border-radius:9px;padding:10px;font-size:13.5px;font-family:inherit;min-height:110px;resize:vertical}
+.sim-in{display:flex;gap:8px;margin-top:14px}
+.sim-in input{flex:1;border:1.5px solid var(--line);border-radius:10px;padding:11px 14px;font-size:14.5px;font-family:inherit}
+.sim-in input:focus{outline:none;border-color:var(--knu)}
+.sim-res{margin-top:14px;padding:16px;border-radius:12px;background:var(--sky);font-size:15px;font-weight:700;text-align:center;color:var(--navy)}
+.confbar{height:14px;background:#E1E9F5;border-radius:999px;overflow:hidden;margin-top:9px}
+.conffill{height:100%;background:linear-gradient(90deg,var(--knu),var(--teal));width:0;transition:width .4s;border-radius:999px}
+
+/* 비교표 강조 */
+table.cmp th:nth-child(2){background:#FDF1DC;color:#B07514}
+table.cmp th:nth-child(3){background:#E3ECFB;color:var(--python)}
+
+/* 링크 리스트 */
+.links{display:flex;flex-wrap:wrap;gap:9px;margin-top:6px}
+.links a{display:inline-flex;align-items:center;gap:7px;border:1.5px solid var(--line);background:#fff;border-radius:10px;padding:9px 15px;font-size:13.5px;font-weight:700;color:var(--navy);text-decoration:none;transition:.15s}
+.links a:hover{border-color:var(--knu);background:var(--sky);color:var(--knu)}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <div class="hero-inner">
+    <span class="eyebrow">경남대학교 · 2026학년도 AI 기초 집중과정</span>
+    <h1 class="serif">AI <span class="accent">첫걸음</span> 8시간<br>스크래치와 파이썬으로 배우는 인공지능</h1>
+    <p class="sub">"AI가 어떻게 배우는가"를 눈으로 보고, 손으로 만듭니다.<br>같은 원리를 <b>블록(스크래치)</b>과 <b>코드(파이썬)</b> 두 방식으로 나란히 실습합니다.</p>
+    <div class="meta">
+      <span>📅 2026. 9. 19.(토) 09:00 – 18:00</span>
+      <span>🍽 점심 12:00 – 13:00</span>
+      <span>🏛 창조관 1층 컴퓨터실습실</span>
+      <span>⏱ 총 8시간 · 8차시</span>
+      <span>🎓 대학생 · 일반 성인 (사전지식 불필요)</span>
+    </div>
+  </div>
+</header>
+
+<nav class="tabs" aria-label="차시별 강의 탭">
+  <div class="tabs-inner">
+    <button class="tab-btn active" data-tab="t1">1차시 · AI란 무엇인가</button>
+    <button class="tab-btn" data-tab="t2">2차시 · 머신러닝 학습 원리</button>
+    <button class="tab-btn" data-tab="t3">3차시 · 스크래치 &amp; ML4K 첫 모델</button>
+    <button class="tab-btn" data-tab="t4">4차시 · 컴퓨터 비전 기초</button>
+    <button class="tab-btn" data-tab="t5">5차시 · 이미지 인식 실습</button>
+    <button class="tab-btn" data-tab="t6">6차시 · 생성형 AI</button>
+    <button class="tab-btn" data-tab="t7">7차시 · AI 프로젝트 ①</button>
+    <button class="tab-btn" data-tab="t8">8차시 · AI 프로젝트 ② &amp; 수료</button>
+  </div>
+</nav>
+
+<main>
+<!-- ════════════ 1차시 ════════════ -->
+<section id="t1" class="panel active">
+  <div class="les-head">
+    <span class="no">LESSON 01 · 09:00 – 10:00</span>
+    <h2>인공지능의 개념과 발전 과정</h2>
+    <p>"인공지능"이라는 말은 1956년에 처음 만들어졌습니다. 70년이 지난 지금, 우리는 그 결과물을 매일 주머니 속에서 씁니다. 오늘 하루의 출발점은 <b>AI가 무엇이고, 무엇이 아닌가</b>를 정확히 구분하는 것입니다.</p>
+    <div class="hm"><span>🧠 개념</span><span>📜 역사</span><span>🐍 파이썬 환경 준비</span><span>🧩 스크래치 환경 준비</span></div>
+  </div>
+
+  <h2 class="sec serif">오늘 하루 로드맵</h2>
+  <p class="sec-desc">8시간을 8차시로 나눕니다. 상단 탭이 곧 차시입니다. 오전은 <b>개념과 원리</b>, 오후는 <b>보고 만지는 실습</b>, 마지막 두 시간은 <b>내 프로젝트</b>입니다.</p>
+  <div class="tt">
+    <div class="tt-row"><div class="tt-time">09:00 – 10:00<small>1차시</small></div><div class="tt-body"><h4>인공지능의 개념과 발전 과정</h4><p>AI·머신러닝·딥러닝의 관계 · 규칙 기반 vs 학습 기반 · 실습 환경(스크래치·Colab) 준비</p></div></div>
+    <div class="tt-row"><div class="tt-time">10:00 – 11:00<small>2차시</small></div><div class="tt-body"><h4>머신러닝의 정의와 학습 원리</h4><p>지도·비지도·강화학습 · 데이터→학습→예측 3단계 · 과적합 · 회귀와 분류 첫 코드</p></div></div>
+    <div class="tt-row"><div class="tt-time">11:00 – 12:00<small>3차시</small></div><div class="tt-body"><h4>스크래치 &amp; 머신러닝 for Kids 기초</h4><p>ML4K 계정·프로젝트 만들기 · 텍스트 분류 모델 훈련 → 스크래치로 첫 AI 프로그램</p></div></div>
+    <div class="tt-row tt-lunch"><div class="tt-time">12:00 – 13:00</div><div class="tt-body"><h4>🍽 점심 식사</h4></div></div>
+    <div class="tt-row"><div class="tt-time">13:00 – 14:00<small>4차시</small></div><div class="tt-body"><h4>컴퓨터 비전의 기초 개념</h4><p>컴퓨터가 보는 이미지 = 숫자 격자 · 픽셀·합성곱·특징맵 · CNN이 사물을 알아보는 순서</p></div></div>
+    <div class="tt-row"><div class="tt-time">14:00 – 15:00<small>5차시</small></div><div class="tt-body"><h4>컴퓨터 비전 응용 실습</h4><p>ML4K 이미지 프로젝트 · Teachable Machine · 파이썬 손글씨 숫자 인식(98%)</p></div></div>
+    <div class="tt-row"><div class="tt-time">15:00 – 16:00<small>6차시</small></div><div class="tt-body"><h4>생성형 AI의 개념과 특징</h4><p>판별형 vs 생성형 · 다음 단어 예측 원리 · 토큰·확률·환각 · 프롬프트 4원칙</p></div></div>
+    <div class="tt-row"><div class="tt-time">16:00 – 17:00<small>7차시</small></div><div class="tt-body"><h4>AI 프로젝트 구현 ① 기획과 학습</h4><p>문제 정의 → 레이블 설계 → 데이터 수집 → 모델 훈련 (스크래치·파이썬 동시 진행)</p></div></div>
+    <div class="tt-row"><div class="tt-time">17:00 – 18:00<small>8차시</small></div><div class="tt-body"><h4>AI 프로젝트 구현 ② 완성·발표·수료</h4><p>프로그램 완성 · 성능 개선 · AI 윤리 · 시연 발표 · 배운 것 정리와 다음 단계</p></div></div>
+  </div>
+  <div class="note"><b>📖 이 페이지 사용법</b> — 각 차시 탭은 <b>이론 → 🧩 스크래치 트랙 → 🐍 파이썬 트랙 → 확인 문제</b> 순서로 되어 있습니다. 두 트랙은 <b>똑같은 개념을 다른 도구로</b> 하는 것이므로, 시간이 부족하면 한 트랙만 해도 학습 목표는 달성됩니다.</div>
+
+  <h2 class="sec serif">학습 목표</h2>
+  <div class="goals">
+    <div class="goal"><b>GOAL 1</b><p>인공지능·머신러닝·딥러닝·생성형 AI의 포함 관계를 그림으로 설명할 수 있다.</p></div>
+    <div class="goal"><b>GOAL 2</b><p>규칙 기반 프로그램과 학습 기반 프로그램의 차이를 예시로 구분할 수 있다.</p></div>
+    <div class="goal"><b>GOAL 3</b><p>스크래치와 Google Colab 실습 환경을 스스로 열고 첫 코드를 실행할 수 있다.</p></div>
+  </div>
+
+  <h2 class="sec serif">1. AI · 머신러닝 · 딥러닝 — 무엇이 무엇을 품고 있나</h2>
+  <div class="card">
+    <p style="font-size:15px;line-height:1.85">세 단어는 경쟁 관계가 아니라 <b>러시아 인형(마트료시카)처럼 포개진 관계</b>입니다. 가장 큰 인형이 인공지능이고, 그 안에 머신러닝이, 그 안에 딥러닝이 들어 있습니다. 오늘 우리가 만들 것은 대부분 <b>머신러닝</b>이고, 6차시에 다룰 ChatGPT·Claude 같은 도구는 <b>딥러닝 안의 생성형 AI</b>입니다.</p>
+    <div style="margin:20px 0;display:flex;justify-content:center">
+      <svg viewBox="0 0 520 320" style="max-width:520px;width:100%" role="img" aria-label="인공지능 안에 머신러닝, 그 안에 딥러닝, 그 안에 생성형 AI가 포함된 동심원 그림">
+        <ellipse cx="260" cy="165" rx="248" ry="148" fill="#E3ECFB" stroke="#1B4FA0" stroke-width="2"/>
+        <ellipse cx="260" cy="180" rx="196" ry="118" fill="#CFE0F7" stroke="#1B4FA0" stroke-width="2"/>
+        <ellipse cx="260" cy="196" rx="140" ry="86" fill="#B4D0F2" stroke="#0F2A52" stroke-width="2"/>
+        <ellipse cx="260" cy="212" rx="86" ry="54" fill="#F2A93B" stroke="#B07514" stroke-width="2"/>
+        <text x="260" y="42" text-anchor="middle" font-size="17" font-weight="800" fill="#0F2A52">인공지능 (AI) · 1956~</text>
+        <text x="260" y="62" text-anchor="middle" font-size="12" fill="#5A6578">사람의 지능적 행동을 기계로 흉내내는 모든 기술</text>
+        <text x="260" y="96" text-anchor="middle" font-size="16" font-weight="800" fill="#0F2A52">머신러닝 (ML) · 1980s~</text>
+        <text x="260" y="114" text-anchor="middle" font-size="11.5" fill="#3B4A63">규칙을 사람이 쓰지 않고, 데이터에서 스스로 찾아냄</text>
+        <text x="260" y="146" text-anchor="middle" font-size="15" font-weight="800" fill="#0F2A52">딥러닝 (DL) · 2012~</text>
+        <text x="260" y="163" text-anchor="middle" font-size="11.5" fill="#26364F">인공 신경망을 깊게 쌓아 스스로 특징까지 찾음</text>
+        <text x="260" y="205" text-anchor="middle" font-size="14.5" font-weight="800" fill="#4A3200">생성형 AI · 2022~</text>
+        <text x="260" y="223" text-anchor="middle" font-size="11.5" fill="#4A3200">새로운 글·그림·소리를</text>
+        <text x="260" y="238" text-anchor="middle" font-size="11.5" fill="#4A3200">만들어내는 딥러닝</text>
+      </svg>
+    </div>
+    <table class="simple">
+      <tr><th style="width:118px">용어</th><th>한 줄 정의</th><th style="width:230px">오늘 만나는 예</th></tr>
+      <tr><td><b>인공지능</b></td><td>사람이 하던 <b>판단·인식·언어</b> 같은 일을 기계가 대신하도록 만든 기술 전체. 규칙을 직접 짜 넣은 것도 포함됩니다.</td><td>엘리베이터 층 배정, 세탁기 코스 선택</td></tr>
+      <tr><td><b>머신러닝</b></td><td>사람이 규칙을 쓰지 않고, <b>예시 데이터를 많이 보여주면 기계가 규칙을 스스로 찾는</b> 방식.</td><td>3차시 텍스트 분류, 5차시 이미지 인식</td></tr>
+      <tr><td><b>딥러닝</b></td><td>사람의 뇌 신경망을 흉내 낸 층(layer)을 <b>깊게 쌓아</b>, 특징까지 기계가 스스로 뽑아내는 머신러닝.</td><td>4차시 CNN, Teachable Machine</td></tr>
+      <tr><td><b>생성형 AI</b></td><td>분류·예측을 넘어 <b>없던 결과물을 새로 만들어내는</b> 딥러닝 모델.</td><td>6차시 ChatGPT·Claude·이미지 생성</td></tr>
+    </table>
+    <div class="ana"><h5>🍳 비유 — 요리사에게 김치찌개를 가르치는 두 가지 방법</h5>
+      <p><b>규칙 기반(전통 AI)</b>은 레시피를 한 줄씩 적어주는 것입니다. "돼지고기 100g, 김치 200g, 물 500ml, 10분 끓이기." 정확하지만 <b>레시피에 없는 상황(신 김치, 묵은지)</b>이 오면 무너집니다.<br>
+      <b>머신러닝</b>은 잘된 김치찌개 1,000그릇과 망한 1,000그릇을 맛보게 한 뒤, <b>"뭐가 다른지 네가 찾아봐"</b>라고 하는 것입니다. 규칙을 사람이 쓰지 않아도, 요리사는 스스로 감을 잡습니다.<br>
+      <b>딥러닝</b>은 그 요리사가 <b>"짠맛·신맛·감칠맛"이라는 개념 자체를 스스로 발명</b>해서 판단하는 단계입니다.</p>
+    </div>
+  </div>
+
+  <h2 class="sec serif">2. 인공지능 70년 — 두 번의 겨울과 세 번의 봄</h2>
+  <p class="sec-desc">AI는 한 번도 순탄하게 성장한 적이 없습니다. 기대가 부풀었다가 무너진 <b>두 번의 "AI 겨울"</b>을 거쳤고, 지금이 세 번째 봄입니다. 이 흐름을 알면 지금의 AI 열풍도 냉정하게 볼 수 있습니다.</p>
+  <div class="card">
+    <div class="tl">
+      <div class="tl-item"><div class="tl-yr">1950</div><div class="tl-t">앨런 튜링, "기계는 생각할 수 있는가"</div><div class="tl-d">논문 〈Computing Machinery and Intelligence〉에서 <b>튜링 테스트</b>를 제안. 사람이 대화 상대가 기계인지 사람인지 구분하지 못하면 "생각한다"고 보자는 기준입니다. AI라는 말이 생기기 전에 나온 질문입니다.</div></div>
+      <div class="tl-item hot"><div class="tl-yr">1956</div><div class="tl-t">다트머스 회의 — "Artificial Intelligence" 탄생</div><div class="tl-d">존 매카시가 미국 다트머스 대학에 마빈 민스키·클로드 섀넌 등을 모아 <b>두 달짜리 여름 워크숍</b>을 엽니다. 여기서 <b>'인공지능'이라는 용어가 처음 공식 사용</b>되었습니다. 오늘날 AI의 공식 생일입니다.</div></div>
+      <div class="tl-item"><div class="tl-yr">1957</div><div class="tl-t">퍼셉트론 — 신경망의 조상</div><div class="tl-d">프랭크 로젠블랫이 사람 뉴런을 흉내 낸 <b>퍼셉트론</b>을 발표. 지금 모든 딥러닝의 최소 단위입니다. 그러나 1969년 민스키가 "XOR 문제조차 못 푼다"고 지적하며 연구가 급랭합니다.</div></div>
+      <div class="tl-item"><div class="tl-yr">1974~1980</div><div class="tl-t">첫 번째 AI 겨울 ❄️</div><div class="tl-d">약속한 성과가 나오지 않자 미국·영국 정부의 연구비가 끊깁니다. 컴퓨터 성능과 데이터가 모두 부족했던 것이 근본 원인이었습니다.</div></div>
+      <div class="tl-item"><div class="tl-yr">1980년대</div><div class="tl-t">전문가 시스템의 짧은 봄 → 두 번째 겨울</div><div class="tl-d">의사·정비사의 지식을 <b>"만약 ~라면 ~하라"</b> 규칙 수천 개로 옮긴 전문가 시스템이 기업에 팔립니다. 하지만 규칙을 사람이 계속 손으로 고쳐야 해서 유지비가 폭발, 1987년경 다시 겨울이 옵니다. <b>규칙 기반의 한계</b>가 증명된 사건입니다.</div></div>
+      <div class="tl-item"><div class="tl-yr">1997</div><div class="tl-t">딥블루, 체스 세계챔피언을 이기다</div><div class="tl-d">IBM의 딥블루가 가리 카스파로프에게 승리. 다만 이것은 <b>초당 2억 수를 계산하는 '무식한 계산'</b>이었지, 배우는 AI는 아니었습니다.</div></div>
+      <div class="tl-item hot"><div class="tl-yr">2012</div><div class="tl-t">알렉스넷 — 딥러닝의 빅뱅 🔥</div><div class="tl-d">이미지 인식 대회 <b>ImageNet</b>에서 딥러닝 모델 AlexNet이 오류율을 26%→16%로 한 번에 낮춥니다. GPU·빅데이터·신경망이 만난 순간이며, <b>오늘날 AI 붐의 실질적 출발점</b>입니다. 4차시에 배울 CNN이 바로 이 기술입니다.</div></div>
+      <div class="tl-item"><div class="tl-yr">2016</div><div class="tl-t">알파고 vs 이세돌 (서울)</div><div class="tl-d">바둑은 경우의 수가 우주의 원자 수보다 많아 "계산으로는 불가능"하다고 여겨졌습니다. 알파고는 <b>강화학습</b>으로 스스로 대국하며 배웠습니다. 한국에서 AI 관심이 폭발한 결정적 계기입니다.</div></div>
+      <div class="tl-item hot"><div class="tl-yr">2017</div><div class="tl-t">트랜스포머 논문 〈Attention Is All You Need〉</div><div class="tl-d">구글이 발표한 이 구조가 <b>오늘날 모든 대형 언어모델(GPT·Claude·Gemini)의 뼈대</b>입니다. 문장 전체를 한 번에 보며 "어느 단어가 중요한지" 스스로 가중치를 매기는 방식입니다.</div></div>
+      <div class="tl-item hot"><div class="tl-yr">2022~현재</div><div class="tl-t">생성형 AI 대중화</div><div class="tl-d">2022년 11월 ChatGPT 공개로 <b>일반인이 AI를 직접 쓰는 시대</b>가 열립니다. 이미지(Midjourney·DALL·E), 영상, 음악까지 확장되었고, 2023년 이후에는 AI가 도구를 사용하고 스스로 작업을 수행하는 <b>AI 에이전트</b>로 발전 중입니다.</div></div>
+    </div>
+    <div class="tip"><b>🎯 강사 포인트</b> — 연표를 외우게 하지 마세요. 대신 <b>"두 번의 겨울은 왜 왔는가"</b> 하나만 남기면 됩니다. 답은 ① 컴퓨터 성능 부족 ② 데이터 부족 ③ 규칙을 사람이 직접 써야 했던 한계. 지금 봄이 온 이유는 이 셋이 모두 해결되었기 때문입니다.</div>
+  </div>
+
+  <h2 class="sec serif">3. 🧩 스크래치 트랙 — 규칙 기반 프로그램 만들어보기</h2>
+  <div class="track scr">
+    <div class="track-head"><span class="ico">🧩</span> 스크래치로 "규칙 AI"의 한계 체험하기 <small>15분</small></div>
+    <div class="track-body">
+      <p style="font-size:14.5px;color:var(--sub);margin-bottom:6px">오늘 배울 머신러닝이 왜 필요한지 알려면, 먼저 <b>머신러닝이 아닌 방식</b>을 만들어봐야 합니다. 스크래치로 "스팸 문자 판별기"를 <b>규칙만으로</b> 만들어보고, 언제 무너지는지 직접 확인합니다.</p>
+      <div class="steps">
+        <div class="step"><div><h5>스크래치 접속</h5><p><b>scratch.mit.edu</b> → 우측 상단 [만들기]. 설치 없이 브라우저에서 바로 실행됩니다. (오늘은 로그인 없이 진행해도 됩니다)</p></div></div>
+        <div class="step"><div><h5>블록 조립</h5><p>[이벤트] → [형태] → [감지] → [제어] 카테고리에서 아래 순서대로 끌어옵니다.</p></div></div>
+        <div class="step"><div><h5>테스트 4문장 넣어보기</h5><p>아래 4개 문장을 차례로 입력하고, 어떤 문장에서 프로그램이 <b>틀리는지</b> 확인합니다.</p></div></div>
+      </div>
+      <div class="blocks">
+        <div class="blk-cap">▼ 조립할 블록 (스크래치 3.0)</div>
+        <div class="blk-row"><span class="blk ev">🏳 클릭했을 때</span></div>
+        <div class="blk-in">
+          <div class="blk-row"><span class="blk sen">묻고 기다리기 <span class="slot">문자 내용을 입력하세요</span></span></div>
+          <div class="blk-row"><span class="blk ct">만약 &lt; <span class="blk op" style="margin:0 4px">대답 에 <span class="slot">무료</span> 이 포함되는가?</span> &gt; (이)라면</span></div>
+          <div class="blk-in"><div class="blk-row"><span class="blk lk">말하기 <span class="slot">🚨 스팸입니다!</span> 2 초</span></div></div>
+          <div class="blk-row" style="margin-left:0">아니면</div>
+          <div class="blk-in"><div class="blk-row"><span class="blk lk">말하기 <span class="slot">✅ 정상 문자예요</span> 2 초</span></div></div>
+        </div>
+        <div class="blk-cap" style="margin-top:14px">▼ 규칙을 늘리려면 이렇게 계속 겹쳐야 합니다 (여기가 핵심!)</div>
+        <div class="blk-row"><span class="blk ct">만약 &lt;<span class="blk op" style="margin:0 4px">대답에 <span class="slot">대출</span> 포함</span> 또는 <span class="blk op" style="margin:0 4px">대답에 <span class="slot">당첨</span> 포함</span> 또는 <span class="blk op" style="margin:0 4px">대답에 <span class="slot">광고</span> 포함</span>&gt; (이)라면</span></div>
+      </div>
+      <table class="simple" style="margin-top:14px">
+        <tr><th>입력 문장</th><th style="width:110px">규칙 판정</th><th style="width:110px">정답</th><th>무엇이 문제인가</th></tr>
+        <tr><td>무료 쿠폰 받으세요</td><td>🚨 스팸</td><td>스팸</td><td>✅ 맞음</td></tr>
+        <tr><td>내일 회의 자료 보냅니다</td><td>✅ 정상</td><td>정상</td><td>✅ 맞음</td></tr>
+        <tr style="background:#FDF4F4"><td>부모님 <b>대출</b> 서류 부탁드려요</td><td>🚨 스팸</td><td>정상</td><td>❌ <b>단어만 보고 맥락을 못 봄</b></td></tr>
+        <tr style="background:#FDF4F4"><td>지금 즉시 <b>무~료</b> 이벤트!</td><td>✅ 정상</td><td>스팸</td><td>❌ <b>글자를 살짝 바꾸면 뚫림</b></td></tr>
+      </table>
+      <div class="note"><b>💡 이 실습의 결론</b> — 규칙을 아무리 많이 추가해도 <b>예외는 무한히 생깁니다.</b> 1980년대 전문가 시스템이 무너진 이유가 정확히 이것입니다. 3차시에서는 같은 문제를 <b>규칙 없이 예시만 보여주는 방식</b>으로 다시 풀어봅니다. 그때 이 표를 다시 꺼내 비교하세요.</div>
+    </div>
+  </div>
+
+  <h2 class="sec serif">4. 🐍 파이썬 트랙 — Google Colab 환경 준비</h2>
+  <div class="track py">
+    <div class="track-head"><span class="ico">🐍</span> 설치 없이 브라우저에서 파이썬 실행하기 <small>15분</small></div>
+    <div class="track-body">
+      <div class="note"><b>😌 걱정하지 마세요</b> — 오늘 파이썬 트랙은 <b>코드를 복사해서 붙여넣고 ▶ 실행 버튼을 누르는 것</b>이 전부입니다. 문법을 외울 필요도, 설치할 것도 없습니다. 목표는 "코드를 짤 줄 아는 것"이 아니라 <b>"블록으로 한 것과 똑같은 일이 코드에서도 일어남을 눈으로 확인하는 것"</b>입니다.</div>
+      <div class="steps">
+        <div class="step"><div><h5>Colab 열기</h5><p>브라우저에서 <b>colab.research.google.com</b> 접속 → 구글 계정 로그인 → [새 노트] 클릭. 설치·결제 없이 무료로 파이썬이 돌아갑니다.</p></div></div>
+        <div class="step"><div><h5>셀에 코드 붙여넣기</h5><p>회색 네모칸(=셀)을 클릭하고, 아래 코드 박스의 <b>[📋 복사]</b> 버튼을 누른 뒤 <b>Ctrl+V</b>로 붙여넣습니다.</p></div></div>
+        <div class="step"><div><h5>실행</h5><p>왼쪽 <b>▶ 재생 버튼</b>을 누르거나 <b>Shift+Enter</b>. 몇 초 뒤 셀 아래에 결과가 나타나면 성공입니다.</p></div></div>
+      </div>
+      <div class="cbox"><div class="cbox-head"><span>🐍 코드 1 · 첫 실행 확인 (환경 점검)</span><button class="copy-btn" onclick="copyCode(this)">📋 복사</button></div>
+<pre>print("안녕하세요, AI 첫걸음 8시간 과정입니다!")
+
+# 오늘 사용할 도구들이 잘 설치되어 있는지 확인합니다
+import sklearn, numpy, matplotlib
+print("scikit-learn 버전:", sklearn.__version__)
+print("준비 완료! 이제 AI를 만들 수 있습니다 🚀")</pre>
+<div class="out"><b>실행 결과</b>안녕하세요, AI 첫걸음 8시간 과정입니다!
+scikit-learn 버전: 1.8.0
+준비 완료! 이제 AI를 만들 수 있습니다 🚀</div></div>
+      <div class="cbox"><div class="cbox-head"><span>🐍 코드 2 · 스크래치에서 만든 "규칙 AI"를 파이썬으로 (똑같은 한계 재현)</span><button class="copy-btn" onclick="copyCode(this)">📋 복사</button></div>
+<pre># 방법 A. 규칙 기반 — 사람이 직접 규칙을 씁니다
+def rule_spam(text):
+    for word in ["대출", "광고", "무료", "당첨"]:
+        if word in text:
+            return "🚨 스팸"
+    return "✅ 정상"
+
+tests = ["무료 쿠폰 받으세요",
+         "내일 회의 자료 보냅니다",
+         "부모님 대출 서류 부탁드려요",
+         "지금 즉시 무~료 이벤트 참여!"]
+
+for t in tests:
+    print(f"{rule_spam(t)}  ←  {t}")</pre>
+<div class="out"><b>실행 결과 — 3번째·4번째가 틀립니다</b>🚨 스팸  ←  무료 쿠폰 받으세요
+✅ 정상  ←  내일 회의 자료 보냅니다
+🚨 스팸  ←  부모님 대출 서류 부탁드려요   ← ❌ 틀림
+✅ 정상  ←  지금 즉시 무~료 이벤트 참여!   ← ❌ 틀림</div></div>
+      <div class="tip"><b>🔍 스크래치와 비교해 보세요</b> — 블록의 <b>[만약 ~ 포함되는가]</b>가 파이썬의 <b>if word in text</b>와 정확히 같은 일을 합니다. 도구가 다를 뿐 <b>논리 구조는 동일</b>합니다. 오늘 하루 이 대응 관계를 계속 확인하게 됩니다.</div>
+    </div>
+  </div>
+
+  <h2 class="sec serif">5. 두 트랙 대응표 — 오늘 하루 지도</h2>
+  <div class="card">
+    <table class="simple cmp">
+      <tr><th style="width:150px">개념</th><th>🧩 스크래치 방식</th><th>🐍 파이썬 방식</th></tr>
+      <tr><td><b>조건 판단</b></td><td>만약 ~ (이)라면 / 아니면</td><td><code>if ... : / else :</code></td></tr>
+      <tr><td><b>반복</b></td><td>~번 반복하기</td><td><code>for i in range(n):</code></td></tr>
+      <tr><td><b>값 저장</b></td><td>변수 [점수]를 ~로 정하기</td><td><code>score = ...</code></td></tr>
+      <tr><td><b>모델 학습</b></td><td>ML4K [훈련] 버튼 → 새로운 머신러닝 모델 훈련시키기</td><td><code>model.fit(X, y)</code></td></tr>
+      <tr><td><b>예측</b></td><td>[텍스트] 인식하기 (레이블)</td><td><code>model.predict([...])</code></td></tr>
+      <tr><td><b>확신도</b></td><td>[텍스트] 인식하기 (정확도)</td><td><code>model.predict_proba([...])</code></td></tr>
+    </table>
+    <div class="note"><b>🎓 오늘의 큰 그림</b> — 스크래치는 <b>개념을 눈으로 보게</b> 해주고, 파이썬은 <b>실무로 확장</b>하게 해줍니다. 어느 쪽이 더 우월한 게 아니라, <b>같은 산을 오르는 두 등산로</b>입니다.</div>
+  </div>
+
+  <h2 class="sec serif">✅ 1차시 확인 문제</h2>
+  <div class="card"><div class="quiz" data-quiz="q1"></div></div>
+
+  <h2 class="sec serif">🔗 더 알아보기</h2>
+  <div class="card">
+    <div class="links">
+      <a href="https://scratch.mit.edu/" target="_blank" rel="noopener">🧩 스크래치 공식 사이트</a>
+      <a href="https://colab.research.google.com/" target="_blank" rel="noopener">🐍 Google Colab</a>
+      <a href="https://machinelearningforkids.co.uk/?lang=ko" target="_blank" rel="noopener">🤖 머신러닝 for Kids (한국어)</a>
+      <a href="https://news.skhynix.co.kr/all-around-ai-1/" target="_blank" rel="noopener">📜 AI의 시작과 발전 과정 (SK하이닉스)</a>
+      <a href="https://namu.wiki/w/인공지능/역사" target="_blank" rel="noopener">📚 인공지능의 역사</a>
+    </div>
+  </div>
+</section>
+<!-- ════════════ 2차시 ════════════ -->
+<section id="t2" class="panel">
+  <div class="les-head">
+    <span class="no">LESSON 02 · 10:00 – 11:00</span>
+    <h2>머신러닝의 정의와 학습 원리</h2>
+    <p>1차시에서 "규칙을 사람이 쓰면 무너진다"를 확인했습니다. 그럼 기계는 <b>어떻게 스스로 규칙을 찾을까요?</b> 이 시간에는 그 과정을 슬라이더로 직접 움직여 보고, 코드 5줄로 재현합니다.</p>
+    <div class="hm"><span>📊 지도·비지도·강화</span><span>📉 오차 줄이기</span><span>⚠️ 과적합</span><span>🎚 회귀 시뮬레이터</span></div>
+  </div>
+
+  <h2 class="sec serif">학습 목표</h2>
+  <div class="goals">
+    <div class="goal"><b>GOAL 1</b><p>머신러닝을 "데이터에서 규칙을 찾는 과정"으로 정의하고 3단계로 설명할 수 있다.</p></div>
+    <div class="goal"><b>GOAL 2</b><p>지도학습·비지도학습·강화학습을 실제 사례로 구분할 수 있다.</p></div>
+    <div class="goal"><b>GOAL 3</b><p>과적합이 왜 문제인지 훈련/시험 정확도 차이로 설명할 수 있다.</p></div>
+  </div>
+
+  <h2 class="sec serif">1. 머신러닝의 정의 — 프로그래밍이 뒤집힌다</h2>
+  <div class="card">
+    <div class="grid2">
+      <div style="background:#FDF4F4;border:1px solid #E8C5C5;border-radius:12px;padding:18px">
+        <b style="color:#C0392B;font-size:13px;letter-spacing:.06em">전통 프로그래밍</b>
+        <p style="font-size:20px;font-weight:800;margin:10px 0;font-family:var(--mono);color:var(--navy)">데이터 + 규칙 → 답</p>
+        <p style="font-size:14px;color:var(--sub)">사람이 규칙(프로그램)을 씁니다. "가로×세로 = 넓이"처럼 규칙이 명확한 일에 강합니다. 하지만 "이 사진이 고양이인가"의 규칙은 사람도 못 씁니다.</p>
+      </div>
+      <div style="background:#F3FAF2;border:1px solid #BCE0BC;border-radius:12px;padding:18px">
+        <b style="color:var(--teal);font-size:13px;letter-spacing:.06em">머신러닝</b>
+        <p style="font-size:20px;font-weight:800;margin:10px 0;font-family:var(--mono);color:var(--navy)">데이터 + 답 → 규칙</p>
+        <p style="font-size:14px;color:var(--sub)">사람은 <b>예시와 정답만</b> 줍니다. 규칙은 기계가 찾아냅니다. 고양이 사진 1만 장에 "고양이"라고 이름표만 붙여주면 됩니다.</p>
+      </div>
+    </div>
+    <div class="ana"><h5>👶 비유 — 아기가 "강아지"를 배우는 방식</h5>
+      <p>아기에게 "강아지는 다리 4개, 털이 있고, 코가 젖어 있으며, 꼬리가 있다"고 <b>정의를 외우게 하는 부모는 없습니다.</b> 그냥 길에서 볼 때마다 "저건 강아지야"라고 말해줄 뿐입니다. 수십 번 반복되면 아기는 <b>한 번도 본 적 없는 품종</b>도 강아지라고 맞힙니다. 정의를 배운 게 아니라 <b>패턴을 배운</b> 것입니다. 머신러닝이 정확히 이것입니다. 그래서 <b>데이터가 곧 교재</b>이고, 편향된 데이터를 주면 편향된 AI가 나옵니다.</p>
+    </div>
+  </div>
+
+  <h2 class="sec serif">2. 학습의 3단계 — 훈련 · 평가 · 예측</h2>
+  <div class="card">
+    <div class="steps">
+      <div class="step"><div><h5>① 훈련 (Training) — 문제집을 푼다</h5><p>가지고 있는 데이터의 <b>약 70~80%</b>를 모델에게 보여줍니다. 모델은 예측해보고, 틀린 만큼(=<b>오차</b>) 내부 숫자를 조금씩 고칩니다. 이 "조금씩 고치기"를 수만 번 반복하는 것이 학습입니다.</p></div></div>
+      <div class="step"><div><h5>② 평가 (Testing) — 처음 보는 시험을 친다</h5><p>남겨둔 <b>20~30%</b>는 훈련 중에 절대 보여주지 않습니다. 이걸로 시험을 봐야 <b>진짜 실력</b>을 알 수 있습니다. 훈련 데이터로 시험 보는 것은 <b>답안지 보고 시험 치는 것</b>과 같습니다.</p></div></div>
+      <div class="step"><div><h5>③ 예측 (Prediction) — 현실에 투입한다</h5><p>시험 점수가 만족스러우면 실제 새 데이터에 씁니다. 이때 모델은 답과 함께 <b>확신도(confidence)</b>도 알려줍니다. 확신도가 낮으면 "모르겠다"고 처리하는 것이 좋은 설계입니다. (3차시·7차시에서 직접 적용)</p></div></div>
+    </div>
+  </div>
+
+  <h2 class="sec serif">3. 머신러닝의 세 갈래</h2>
+  <div class="card">
+    <table class="simple">
+      <tr><th style="width:120px">종류</th><th style="width:190px">한 줄 정의</th><th>일상 사례</th><th style="width:130px">오늘 실습</th></tr>
+      <tr><td><b>지도학습</b><br><span style="font-size:12px;color:var(--sub)">Supervised</span></td><td>정답표(레이블)가 <b>있는</b> 데이터로 배움. "이건 A, 저건 B"</td><td>스팸 메일 분류, 사진 속 얼굴 인식, 집값 예측, 병원 영상 판독</td><td>3·5·7차시 전부</td></tr>
+      <tr><td><b>비지도학습</b><br><span style="font-size:12px;color:var(--sub)">Unsupervised</span></td><td>정답표가 <b>없이</b> 비슷한 것끼리 스스로 묶음</td><td>쇼핑몰 고객 그룹 나누기, 뉴스 자동 주제 분류, 이상 거래 탐지</td><td>이 차시 코드 3</td></tr>
+      <tr><td><b>강화학습</b><br><span style="font-size:12px;color:var(--sub)">Reinforcement</span></td><td>정답 대신 <b>점수(보상)</b>를 주면 점수를 최대화하며 배움</td><td>알파고, 게임 AI, 로봇 걷기, 자율주행 주차</td><td>개념만 (심화)</td></tr>
+    </table>
+    <div class="ana"><h5>🏫 비유 — 세 가지 공부법</h5>
+      <p><b>지도학습</b>은 정답이 있는 문제집을 푸는 것. <b>비지도학습</b>은 정답 없이 자료를 읽고 "이건 이 주제, 저건 저 주제"로 스스로 분류하는 것. <b>강화학습</b>은 자전거 배우기입니다 — 아무도 "핸들을 3.2도 꺾어라"라고 알려주지 않지만, <b>넘어지면 아프고(음의 보상) 잘 가면 신나서(양의 보상)</b> 몸이 알아서 익힙니다.</p>
+    </div>
+  </div>
+
+  <h2 class="sec serif">4. 🎚 직접 해보기 — "학습"이란 오차를 줄이는 일</h2>
+  <p class="sec-desc">기계가 하는 학습은 사실 <b>"선을 조금씩 옮겨서 오차를 가장 작게 만드는 일"</b>입니다. 슬라이더를 움직여 <b>여러분이 직접</b> 학습해 보세요. 오차가 가장 작아지는 지점을 찾으면, 그게 기계가 찾는 답과 같습니다.</p>
+  <div class="card">
+    <div class="demo-frame">
+      <div class="demo-bar"><i class="r"></i><i class="y"></i><i class="g"></i><span>학습 시뮬레이터 — 공부시간으로 성적 예측하기</span></div>
+      <div class="demo-body">
+        <div class="reg">
+          <svg id="regSvg" class="reg-svg" viewBox="0 0 460 262" role="img" aria-label="공부 시간과 시험 점수의 산점도 및 예측 직선"></svg>
+          <div class="reg-ctl"><label for="regA">기울기 (a)</label><input id="regA" type="range" min="0" max="16" step="0.1" value="3"><span class="val" id="regAv">3.0</span></div>
+          <div class="reg-ctl"><label for="regB">시작점 (b)</label><input id="regB" type="range" min="0" max="60" step="1" value="10"><span class="val" id="regBv">10</span></div>
+          <div class="loss" id="regLoss"></div>
+          <div style="display:flex;gap:10px;justify-content:center;margin-top:6px;flex-wrap:wrap">
+            <button class="btn ghost" onclick="regAuto()">🤖 기계에게 맡기기 (자동 학습)</button>
+            <button class="btn ghost" onclick="regReset()">↺ 처음으로</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="tip"><b>🎯 여기서 꼭 짚을 것</b> — [자동 학습]을 누르면 기계가 <b>a=8.43, b=26.57</b>을 찾아냅니다. 여러분이 손으로 찾은 값과 비슷할 겁니다. 기계가 한 일은 마법이 아니라 <b>"오차가 줄어드는 방향으로 a와 b를 조금씩 옮기기"</b>를 아주 빠르게 반복한 것뿐입니다. 이것이 <b>경사하강법</b>이고, 딥러닝도 똑같은 원리로 학습합니다.</div>
+  </div>
+
+  <h2 class="sec serif">5. 🧩 스크래치 트랙 — 블록으로 "예측기" 만들기</h2>
+  <div class="track scr">
+    <div class="track-head"><span class="ico">🧩</span> 학습된 규칙(y = 8.43x + 26.57)을 블록으로 사용하기 <small>15분</small></div>
+    <div class="track-body">
+      <p style="font-size:14.5px;color:var(--sub);margin-bottom:6px">기계가 찾아낸 규칙을 스크래치로 옮겨봅니다. <b>핵심은 "이 숫자 8.43을 사람이 정한 게 아니라 데이터가 정했다"</b>는 점입니다.</p>
+      <div class="blocks">
+        <div class="blk-cap">▼ 예측기 블록</div>
+        <div class="blk-row"><span class="blk ev">🏳 클릭했을 때</span></div>
+        <div class="blk-in">
+          <div class="blk-row"><span class="blk sen">묻고 기다리기 <span class="slot">하루에 몇 시간 공부하나요?</span></span></div>
+          <div class="blk-row"><span class="blk va">변수 [예상점수] 를 <span class="blk op" style="margin:0 4px">( <span class="blk op" style="margin:0 3px">대답 × <span class="slot">8.43</span></span> ) + <span class="slot">26.57</span></span> 로 정하기</span></div>
+          <div class="blk-row"><span class="blk lk">말하기 <span class="blk op" style="margin:0 4px">가위 <span class="slot">예상 점수는</span> 와 (예상점수) 결합하기</span> 3 초</span></div>
+        </div>
+        <div class="blk-cap" style="margin-top:14px">▼ 심화 — 100점이 넘으면 경고하기 (외삽의 위험)</div>
+        <div class="blk-row"><span class="blk ct">만약 &lt;<span class="blk op" style="margin:0 4px">(예상점수) &gt; <span class="slot">100</span></span>&gt; (이)라면</span></div>
+        <div class="blk-in"><div class="blk-row"><span class="blk lk">말하기 <span class="slot">⚠️ 학습한 범위(1~8시간) 밖이라 믿을 수 없어요!</span> 3 초</span></div></div>
+      </div>
+      <div class="note"><b>🚨 반드시 체험시킬 것</b> — "10시간"을 입력하면 예상 점수가 <b>110.9점</b>이 나옵니다. 100점 만점 시험에서 불가능한 값입니다. 모델은 <b>배운 범위(1~8시간) 밖에서는 엉뚱한 답</b>을 자신 있게 내놓습니다. 이것을 <b>외삽(extrapolation)의 위험</b>이라 하고, 6차시 생성형 AI의 <b>환각</b>과 뿌리가 같은 문제입니다.</div>
+    </div>
+  </div>
+
+  <h2 class="sec serif">6. 🐍 파이썬 트랙 — 머신러닝 첫 코드 5줄</h2>
+  <div class="track py">
+    <div class="track-head"><span class="ico">🐍</span> 지도학습(회귀) · 지도학습(분류) · 비지도학습 <small>25분</small></div>
+    <div class="track-body">
+      <div class="cbox"><div class="cbox-head"><span>🐍 코드 1 · 지도학습 (회귀) — 위 시뮬레이터를 코드로</span><button class="copy-btn" onclick="copyCode(this)">📋 복사</button></div>
+<pre>from sklearn.linear_model import LinearRegression
+import numpy as np
+
+# ① 데이터 준비 : X = 공부 시간, y = 시험 점수
+X = np.array([[1],[2],[3],[4],[5],[6],[7],[8]])
+y = np.array([32, 45, 51, 63, 70, 78, 85, 92])
+
+# ② 학습 (딱 한 줄!)
+model = LinearRegression()
+model.fit(X, y)
+
+# ③ 기계가 찾아낸 규칙 확인
+print("기계가 찾은 규칙 : 점수 =", round(float(model.coef_[0]),2),
+      "× 공부시간 +", round(float(model.intercept_),2))
+print("설명력(R²) :", round(model.score(X, y), 3))
+
+# ④ 예측
+for h in [4.5, 9, 10]:
+    print(f"{h}시간 공부 → 예상 {model.predict([[h]])[0]:.1f}점")</pre>
+<div class="out"><b>실행 결과</b>기계가 찾은 규칙 : 점수 = 8.43 × 공부시간 + 26.57
+설명력(R²) : 0.991
+4.5시간 공부 → 예상 64.5점
+9시간 공부 → 예상 102.4점    ← ⚠️ 100점 초과
+10시간 공부 → 예상 110.9점   ← ⚠️ 외삽의 위험</div></div>
+      <div class="tip"><b>🔍 딱 한 줄만 기억하세요</b> — <code>model.fit(X, y)</code>. 이 한 줄이 "학습"의 전부입니다. 오늘 나오는 모든 머신러닝 코드는 <b>데이터 준비 → fit → predict</b> 이 세 박자를 벗어나지 않습니다. 스크래치의 <b>[새로운 머신러닝 모델 훈련시키기]</b> 버튼이 바로 이 <code>fit</code>입니다.</div>
+
+      <div class="cbox"><div class="cbox-head"><span>🐍 코드 2 · 비지도학습 — 정답 없이 스스로 무리 짓기</span><button class="copy-btn" onclick="copyCode(this)">📋 복사</button></div>
+<pre>from sklearn.cluster import KMeans
+import numpy as np
+
+# 정답(레이블)이 전혀 없습니다. [키(cm), 몸무게(kg)] 뿐입니다.
+data = np.array([[150,45],[152,47],[155,50],[158,52],
+                 [175,70],[178,72],[180,75],[182,78],
+                 [165,58],[168,60],[170,62],[172,65]])
+
+km = KMeans(n_clusters=3, n_init=10, random_state=0)
+km.fit(data)
+
+for i, group in enumerate(km.labels_):
+    print(f"{data[i][0]}cm {data[i][1]}kg  →  {group}번 그룹")
+
+print("\n각 그룹의 중심 :", km.cluster_centers_.round(1).tolist())</pre>
+<div class="out"><b>실행 결과 — 아무도 안 가르쳤는데 3개 체형 그룹이 나왔습니다</b>150cm 45kg  →  1번 그룹
+152cm 47kg  →  1번 그룹
+175cm 70kg  →  0번 그룹
+180cm 75kg  →  0번 그룹
+165cm 58kg  →  2번 그룹
+170cm 62kg  →  2번 그룹
+...
+각 그룹의 중심 : [[178.8, 73.8], [153.8, 48.5], [168.8, 61.2]]</div></div>
+      <div class="note"><b>💡 비지도학습의 특징</b> — 기계는 그룹을 <b>0번·1번·2번</b>이라고만 부릅니다. "이건 큰 체형"이라는 <b>이름은 사람이 붙여야</b> 합니다. 기계는 <b>구조</b>를 찾고, <b>의미</b>는 사람이 부여합니다. 이 역할 분담이 AI 활용의 핵심입니다.</div>
+
+      <div class="cbox"><div class="cbox-head"><span>🐍 코드 3 · ⚠️ 과적합 실험 — 100점인데 실력은 86점</span><button class="copy-btn" onclick="copyCode(this)">📋 복사</button></div>
+<pre>from sklearn.tree import DecisionTreeClassifier
+from sklearn.datasets import load_digits
+from sklearn.model_selection import train_test_split
+
+d = load_digits()          # 손글씨 숫자 데이터 1,797장
+X_train, X_test, y_train, y_test = train_test_split(
+    d.data, d.target, test_size=0.3, random_state=1)
+
+print("복잡도 | 훈련 정확도 | 시험 정확도")
+for depth in [1, 3, 5, 10, None]:
+    m = DecisionTreeClassifier(max_depth=depth, random_state=1)
+    m.fit(X_train, y_train)
+    print(f"{str(depth):>6} |   {m.score(X_train,y_train)*100:5.1f}%   |   "
+          f"{m.score(X_test,y_test)*100:5.1f}%")</pre>
+<div class="out"><b>실행 결과</b>복잡도 | 훈련 정확도 | 시험 정확도
+     1 |    20.0%   |    19.3%   ← 너무 단순 (과소적합)
+     3 |    48.0%   |    45.9%
+     5 |    68.7%   |    68.5%   ← 훈련≈시험 (건강함)
+    10 |    97.3%   |    85.4%   ← 벌어지기 시작
+  None |   100.0%   |    86.3%   ← 과적합! 14%p 격차</div></div>
+      <div class="ana"><h5>📚 비유 — 기출문제만 통째로 외운 수험생</h5>
+        <p>훈련 정확도 <b>100%</b>인데 시험 정확도가 <b>86%</b>라는 것은, <b>문제집 답을 통째로 외웠지만 응용문제는 못 푸는 학생</b>과 같습니다. 이것이 <b>과적합(overfitting)</b>입니다.<br><br>
+        그래서 머신러닝에서 자랑해야 할 숫자는 훈련 정확도가 아니라 <b>시험 정확도</b>입니다. AI 성능 뉴스를 볼 때도 <b>"어떤 데이터로 평가한 수치인가"</b>를 먼저 확인해야 합니다.<br><br>
+        <b>해결책 3가지</b> — ① 데이터를 더 모은다 ② 모델을 덜 복잡하게 만든다(위 표의 depth=5) ③ 훈련/시험 데이터를 반드시 분리한다.</p>
+      </div>
+    </div>
+  </div>
+
+  <h2 class="sec serif">✅ 2차시 확인 문제</h2>
+  <div class="card"><div class="quiz" data-quiz="q2"></div></div>
+
+  <h2 class="sec serif">🔗 더 알아보기</h2>
+  <div class="card">
+    <div class="links">
+      <a href="https://scikit-learn.org/stable/getting_started.html" target="_blank" rel="noopener">📘 scikit-learn 시작하기</a>
+      <a href="https://developers.google.com/machine-learning/crash-course?hl=ko" target="_blank" rel="noopener">🎓 구글 머신러닝 단기집중과정 (한국어)</a>
+      <a href="https://teachablemachine.withgoogle.com/" target="_blank" rel="noopener">🖐 Teachable Machine</a>
+    </div>
+  </div>
+</section>
+<!-- ════════════ 3차시 ════════════ -->
+<section id="t3" class="panel">
+  <div class="les-head">
+    <span class="no">LESSON 03 · 11:00 – 12:00</span>
+    <h2>스크래치 &amp; 머신러닝 for Kids 기초</h2>
+    <p>드디어 <b>직접 AI를 훈련시킵니다.</b> 1차시에서 규칙으로 실패했던 그 문제를, 이번에는 <b>규칙을 한 줄도 쓰지 않고</b> 예시만 보여줘서 해결합니다. 이 시간이 오늘 하루의 전환점입니다.</p>
+    <div class="hm"><span>🤖 ML4K 계정</span><span>🏷 레이블 설계</span><span>🎓 모델 훈련</span><span>🧩 스크래치 연동</span></div>
+  </div>
+
+  <h2 class="sec serif">학습 목표</h2>
+  <div class="goals">
+    <div class="goal"><b>GOAL 1</b><p>ML4K에서 프로젝트를 만들고 텍스트 분류 모델을 훈련시킬 수 있다.</p></div>
+    <div class="goal"><b>GOAL 2</b><p>훈련 → 학습&amp;평가 → 만들기 3단계를 스스로 순환할 수 있다.</p></div>
+    <div class="goal"><b>GOAL 3</b><p>학습된 모델을 스크래치 블록으로 불러와 동작하는 프로그램을 완성할 수 있다.</p></div>
+  </div>
+
+  <h2 class="sec serif">1. 머신러닝 for Kids란</h2>
+  <div class="card">
+    <p style="font-size:15px;line-height:1.85">IBM 개발자 <b>Dale Lane</b>이 만든 무료 교육 플랫폼입니다. 텍스트·이미지·숫자·소리를 <b>브라우저에서 훈련시키고</b>, 그 결과를 <b>스크래치·파이썬·앱인벤터</b>에서 바로 쓸 수 있게 해줍니다. 어려운 설치나 코딩 없이 <b>머신러닝의 전 과정을 30분 안에 한 바퀴</b> 돌 수 있는 것이 최대 장점입니다.</p>
+    <div class="grid3" style="margin-top:16px">
+      <div class="card" style="margin:0;border-top:4px solid var(--gold)"><span class="badge b-gold">STEP 1</span><h4 style="margin:9px 0 5px;font-weight:800">훈련 (Train)</h4><p style="font-size:13.5px;color:var(--sub)">레이블(=상자)을 만들고 그 안에 예시를 넣습니다. 레이블당 <b>최소 5개, 권장 10~20개</b>.</p></div>
+      <div class="card" style="margin:0;border-top:4px solid var(--knu)"><span class="badge b-blue">STEP 2</span><h4 style="margin:9px 0 5px;font-weight:800">학습 &amp; 평가 (Learn &amp; Test)</h4><p style="font-size:13.5px;color:var(--sub)">[새로운 머신러닝 모델 훈련시키기] 클릭 → 30초~수 분 대기 → 새 문장으로 테스트.</p></div>
+      <div class="card" style="margin:0;border-top:4px solid var(--teal)"><span class="badge b-teal">STEP 3</span><h4 style="margin:9px 0 5px;font-weight:800">만들기 (Make)</h4><p style="font-size:13.5px;color:var(--sub)">스크래치3 / 파이썬 / 앱인벤터 중 선택. 학습한 모델이 <b>새 블록</b>으로 나타납니다.</p></div>
+    </div>
+    <table class="simple" style="margin-top:16px">
+      <tr><th style="width:130px">프로젝트 유형</th><th>무엇을 인식하나</th><th>오늘 사용</th></tr>
+      <tr><td><b>텍스트 (Text)</b></td><td>문장·단어의 의미를 분류. 감정 분석, 의도 파악, 챗봇에 사용</td><td>✅ 3차시 · 7차시</td></tr>
+      <tr><td><b>이미지 (Images)</b></td><td>웹캠·업로드 사진을 분류. 4~5차시 컴퓨터 비전의 실습 도구</td><td>✅ 5차시</td></tr>
+      <tr><td><b>숫자 (Numbers)</b></td><td>표 형태의 수치로 예측·분류. 2차시 회귀와 같은 계열</td><td>선택 실습</td></tr>
+      <tr><td><b>소리 (Sounds)</b></td><td>마이크로 녹음한 소리를 분류. 박수·목소리 명령 등</td><td>심화</td></tr>
+    </table>
+  </div>
+
+  <h2 class="sec serif">2. 🧩 스크래치 트랙 — 실습 A "칭찬 &amp; 불평 판별기"</h2>
+  <div class="track scr">
+    <div class="track-head"><span class="ico">🧩</span> ML4K 텍스트 프로젝트 → 스크래치 연동 (전체 과정) <small>35분</small></div>
+    <div class="track-body">
+      <div class="steps">
+        <div class="step"><div><h5>사이트 접속 &amp; 로그인</h5><p><b>machinelearningforkids.co.uk</b> 접속 → 우측 상단 언어를 <b>한국어</b>로 변경 → [시작해봅시다] → [지금 실행해보기]. <br><span style="color:#B07514;font-weight:700">💡 계정 없이도 체험 가능하지만, 작업이 저장되지 않습니다. 오늘은 [회원가입]으로 무료 계정을 만드시길 권합니다.</span></p></div></div>
+        <div class="step"><div><h5>프로젝트 추가</h5><p>[프로젝트] → [+ 프로젝트 추가] → <b>이름: 칭찬불평판별기</b> / <b>인식 방법: 텍스트</b> / <b>언어: Korean</b> → [만들기].</p></div></div>
+        <div class="step"><div><h5>레이블(상자) 2개 만들기</h5><p>생성된 프로젝트 클릭 → [훈련] → [+ 새로운 레이블 추가] → <b>칭찬</b> / <b>불평</b> 두 개를 만듭니다. <br><b>레이블 = 답안지의 보기</b>라고 생각하면 쉽습니다.</p></div></div>
+        <div class="step"><div><h5>예시 데이터 넣기 (가장 중요!)</h5><p>각 레이블 아래 [+ 데이터 추가]를 눌러 아래 표의 문장을 넣습니다. <b>레이블당 8개 이상</b>, 그리고 <b>두 레이블의 개수를 비슷하게</b> 맞추는 것이 핵심입니다.</p></div></div>
+        <div class="step"><div><h5>학습시키기</h5><p>[프로젝트로 돌아가기] → [학습 &amp; 평가] → <b>[새로운 머신러닝 모델을 훈련시켜보세요]</b> 클릭. 상태가 <b>Training → Available</b>로 바뀌면 완료(보통 30초~수 분).</p></div></div>
+        <div class="step"><div><h5>테스트 — 넣지 않은 문장으로!</h5><p>같은 화면 아래 입력창에 <b>훈련에 쓰지 않은 새 문장</b>을 넣어봅니다. 2차시에서 배운 <b>"시험 데이터로 평가하기"</b>가 바로 이것입니다.</p></div></div>
+        <div class="step"><div><h5>스크래치로 만들기</h5><p>[프로젝트로 돌아가기] → [만들기] → <b>[스크래치 3]</b> → [스크래치 3 열기]. 왼쪽 블록 팔레트 맨 아래에 <b>프로젝트 이름의 새 카테고리</b>가 생겨 있습니다.</p></div></div>
+      </div>
+
+      <table class="simple" style="margin-top:6px">
+        <tr><th style="width:50%">🏷 레이블: <b style="color:var(--teal)">칭찬</b></th><th>🏷 레이블: <b style="color:#C0392B">불평</b></th></tr>
+        <tr><td>정말 재미있어요</td><td>너무 지루해요</td></tr>
+        <tr><td>최고예요 감사합니다</td><td>최악이에요 실망했어요</td></tr>
+        <tr><td>너무 좋아요</td><td>설명이 하나도 이해가 안 돼요</td></tr>
+        <tr><td>친절해서 기분이 좋아요</td><td>시간 낭비였어요</td></tr>
+        <tr><td>수업이 알차고 유익했어요</td><td>너무 어렵고 불친절해요</td></tr>
+        <tr><td>설명이 이해가 잘 돼요</td><td>다시는 안 들을래요</td></tr>
+        <tr><td>다음에 또 듣고 싶어요</td><td>진도가 너무 빨라서 힘들어요</td></tr>
+        <tr><td>완전 만족합니다</td><td>별로예요</td></tr>
+      </table>
+
+      <div class="blocks">
+        <div class="blk-cap">▼ 스크래치에서 조립할 블록 (청록색 = ML4K가 만들어준 새 블록)</div>
+        <div class="blk-row"><span class="blk ev">🏳 클릭했을 때</span></div>
+        <div class="blk-in">
+          <div class="blk-row"><span class="blk ct">무한 반복하기</span></div>
+          <div class="blk-in">
+            <div class="blk-row"><span class="blk sen">묻고 기다리기 <span class="slot">수업 후기를 남겨주세요!</span></span></div>
+            <div class="blk-row"><span class="blk ct">만약 &lt;<span class="blk op" style="margin:0 4px"><span class="blk ml" style="margin:0 3px">텍스트 (대답) 인식하기 (레이블)</span> = <span class="slot">칭찬</span></span>&gt; (이)라면</span></div>
+            <div class="blk-in">
+              <div class="blk-row"><span class="blk lk">말하기 <span class="slot">고맙습니다! 😊</span> 2 초</span></div>
+              <div class="blk-row"><span class="blk lk">모양을 <span class="slot">웃는 얼굴</span>(으)로 바꾸기</span></div>
+            </div>
+            <div class="blk-row" style="margin-left:0">아니면</div>
+            <div class="blk-in">
+              <div class="blk-row"><span class="blk lk">말하기 <span class="slot">죄송합니다, 더 노력할게요 😢</span> 2 초</span></div>
+              <div class="blk-row"><span class="blk lk">모양을 <span class="slot">슬픈 얼굴</span>(으)로 바꾸기</span></div>
+            </div>
+          </div>
+        </div>
+        <div class="blk-cap" style="margin-top:16px">▼ 심화 — 확신도가 낮으면 "모르겠다"고 말하게 하기 <span class="badge b-gold">권장</span></div>
+        <div class="blk-row"><span class="blk ct">만약 &lt;<span class="blk op" style="margin:0 4px"><span class="blk ml" style="margin:0 3px">텍스트 (대답) 인식하기 (정확도)</span> &lt; <span class="slot">70</span></span>&gt; (이)라면</span></div>
+        <div class="blk-in"><div class="blk-row"><span class="blk lk">말하기 <span class="slot">🤔 잘 모르겠어요. 다르게 말해줄래요?</span> 2 초</span></div></div>
+      </div>
+      <div class="tip"><b>🎯 반드시 시켜볼 실험 3가지</b><br>
+      ① <b>"오늘 점심 뭐 먹지"</b>처럼 <b>둘 다 아닌 문장</b>을 넣어보세요 → 억지로 둘 중 하나를 고릅니다. 모델은 <b>배운 상자 안에서만</b> 답합니다.<br>
+      ② 데이터를 <b>칭찬 15개 : 불평 3개</b>로 불균형하게 만든 뒤 다시 훈련 → 대부분 "칭찬"으로 쏠립니다. <b>데이터 편향</b>의 실물입니다.<br>
+      ③ 데이터를 <b>각 3개씩만</b> 넣고 훈련 → 정확도가 뚝 떨어집니다. <b>데이터의 양</b>이 성능을 만든다는 것을 몸으로 확인합니다.</div>
+    </div>
+  </div>
+
+  <h2 class="sec serif">3. 🎮 미리 체험 — 브라우저에서 바로 해보는 분류 시뮬레이터</h2>
+  <p class="sec-desc">ML4K 접속이 늦어지는 분들을 위해, <b>같은 원리의 미니 분류기</b>를 이 페이지에 넣어두었습니다. 왼쪽 상자에 예시를 넣고 훈련시킨 뒤 테스트해보세요.</p>
+  <div class="card">
+    <div class="demo-frame">
+      <div class="demo-bar"><i class="r"></i><i class="y"></i><i class="g"></i><span>미니 텍스트 분류기 — 훈련 → 평가 → 예측</span></div>
+      <div class="demo-body">
+        <div class="sim-row">
+          <div class="sim-box a"><h6>🏷 레이블 A : <span id="labA">칭찬</span> (한 줄에 하나씩)</h6>
+            <textarea id="trainA">정말 재미있어요
+최고예요 감사합니다
+너무 좋아요
+친절해서 기분이 좋아요
+수업이 알차고 유익했어요
+설명이 이해가 잘 돼요
+다음에 또 듣고 싶어요
+완전 만족합니다</textarea></div>
+          <div class="sim-box b"><h6>🏷 레이블 B : <span id="labB">불평</span> (한 줄에 하나씩)</h6>
+            <textarea id="trainB">너무 지루해요
+최악이에요 실망했어요
+설명이 하나도 이해가 안 돼요
+시간 낭비였어요
+너무 어렵고 불친절해요
+다시는 안 들을래요
+진도가 너무 빨라서 힘들어요
+별로예요</textarea></div>
+        </div>
+        <div style="text-align:center;margin-top:14px"><button class="btn" onclick="simTrain()">🎓 새로운 머신러닝 모델 훈련시키기</button></div>
+        <div class="sim-in"><input id="simQ" placeholder="훈련에 넣지 않은 새 문장을 입력해보세요" onkeydown="if(event.key==='Enter')simTest()"><button class="btn ghost" onclick="simTest()">판별</button></div>
+        <div class="sim-res" id="simRes">먼저 [훈련시키기] 버튼을 눌러주세요.</div>
+        <div class="confbar"><div class="conffill" id="simBar"></div></div>
+      </div>
+    </div>
+    <div class="note"><b>ℹ️ 이 시뮬레이터의 원리</b> — 글자 2~3개 묶음(문자 n-gram)의 등장 빈도를 세어 <b>나이브 베이즈</b> 방식으로 확률을 계산합니다. ML4K 내부도 개념적으로 같은 일을 훨씬 정교하게 합니다. 아래 파이썬 코드가 이 시뮬레이터의 <b>실제 구현</b>입니다.</div>
+  </div>
+
+  <h2 class="sec serif">4. 🐍 파이썬 트랙 — 같은 모델을 코드 10줄로</h2>
+  <div class="track py">
+    <div class="track-head"><span class="ico">🐍</span> 규칙 없이, 예시만으로 스팸/후기 분류하기 <small>20분</small></div>
+    <div class="track-body">
+      <div class="cbox"><div class="cbox-head"><span>🐍 코드 1 · ML4K와 똑같은 일을 하는 파이썬 코드</span><button class="copy-btn" onclick="copyCode(this)">📋 복사</button></div>
+<pre>from sklearn.feature_extraction.text import CountVectorizer
+from sklearn.naive_bayes import MultinomialNB
+from sklearn.pipeline import make_pipeline
+
+# ① 훈련 데이터 = ML4K의 "레이블 상자"와 완전히 동일
+good = ["정말 재미있어요", "최고예요 감사합니다", "너무 좋아요",
+        "친절해서 기분이 좋아요", "수업이 알차고 유익했어요",
+        "설명이 이해가 잘 돼요", "다음에 또 듣고 싶어요", "완전 만족합니다"]
+bad  = ["너무 지루해요", "최악이에요 실망했어요", "설명이 하나도 이해가 안 돼요",
+        "시간 낭비였어요", "너무 어렵고 불친절해요", "다시는 안 들을래요",
+        "진도가 너무 빨라서 힘들어요", "별로예요"]
+
+X = good + bad
+y = ["칭찬"]*len(good) + ["불평"]*len(bad)
+
+# ② 학습 — ML4K의 [훈련시키기] 버튼과 같은 역할
+model = make_pipeline(
+    CountVectorizer(analyzer='char_wb', ngram_range=(2,3)),  # 글자 묶음 세기
+    MultinomialNB())                                          # 확률로 판단
+model.fit(X, y)
+
+# ③ 테스트 — 훈련에 없던 새 문장으로!
+for t in ["오늘 수업 정말 좋았어요", "너무 어려워서 이해가 안 됐어요",
+          "감사합니다 최고", "시간이 아까웠어요"]:
+    label = model.predict([t])[0]
+    conf  = max(model.predict_proba([t])[0]) * 100
+    print(f"'{t}' → {label} (확신도 {conf:.0f}%)")</pre>
+<div class="out"><b>실행 결과 — 규칙을 한 줄도 안 썼는데 전부 맞힙니다</b>'오늘 수업 정말 좋았어요' → 칭찬 (확신도 100%)
+'너무 어려워서 이해가 안 됐어요' → 불평 (확신도 100%)
+'감사합니다 최고' → 칭찬 (확신도 100%)
+'시간이 아까웠어요' → 불평 (확신도 82%)</div></div>
+      <div class="ana"><h5>🔑 1차시와 비교해 보세요 — 오늘의 가장 중요한 순간</h5>
+        <p>1차시 규칙 기반 코드에는 <code>if "무료" in text</code> 같은 <b>규칙이 사람 손으로</b> 들어 있었고, 예외에 뚫렸습니다.<br>
+        위 코드에는 <b>"이 단어가 있으면 칭찬"이라는 규칙이 단 한 줄도 없습니다.</b> 오직 <b>예시 16개</b>만 줬을 뿐인데, <b>훈련에 없던 문장</b>을 맞힙니다.<br><br>
+        <b>이 차이가 곧 "인공지능"과 "머신러닝"의 경계</b>입니다. 그리고 이것이 1980년대 전문가 시스템이 실패한 자리에서 머신러닝이 이긴 이유입니다.</p>
+      </div>
+      <div class="cbox"><div class="cbox-head"><span>🐍 코드 2 · 데이터를 줄이면 어떻게 되나 (직접 실험)</span><button class="copy-btn" onclick="copyCode(this)">📋 복사</button></div>
+<pre># 위 코드에 이어서 실행하세요.
+# 훈련 데이터를 3개씩만 써서 다시 학습시켜 봅니다.
+small = make_pipeline(
+    CountVectorizer(analyzer='char_wb', ngram_range=(2,3)), MultinomialNB())
+small.fit(good[:3] + bad[:3], ["칭찬"]*3 + ["불평"]*3)
+
+test = ["오늘 수업 정말 좋았어요", "시간이 아까웠어요", "진도가 빨라서 못 따라가겠어요"]
+print("=== 데이터 3개씩 (부족) ===")
+for t in test:
+    print(f"  {t} → {small.predict([t])[0]} "
+          f"({max(small.predict_proba([t])[0])*100:.0f}%)")
+
+print("\n=== 데이터 8개씩 (충분) ===")
+for t in test:
+    print(f"  {t} → {model.predict([t])[0]} "
+          f"({max(model.predict_proba([t])[0])*100:.0f}%)")</pre>
+<div class="out"><b>확인 포인트</b>데이터가 적으면 확신도가 낮아지고, 새로운 표현일수록 자주 틀립니다.
+→ <b>"모델을 잘 만드는 법 = 좋은 데이터를 더 모으는 법"</b></div></div>
+    </div>
+  </div>
+
+  <h2 class="sec serif">5. 스크래치 ↔ 파이썬 대응표</h2>
+  <div class="card">
+    <table class="simple cmp">
+      <tr><th style="width:150px">단계</th><th>🧩 ML4K + 스크래치</th><th>🐍 파이썬</th></tr>
+      <tr><td>데이터 준비</td><td>레이블 만들고 [+ 데이터 추가]</td><td><code>X = [...] ; y = [...]</code></td></tr>
+      <tr><td>학습</td><td>[새로운 머신러닝 모델 훈련시키기] 버튼</td><td><code>model.fit(X, y)</code></td></tr>
+      <tr><td>예측</td><td><span style="background:#00A3A3;color:#fff;padding:2px 8px;border-radius:6px;font-size:12px">텍스트 (대답) 인식하기 (레이블)</span></td><td><code>model.predict([text])</code></td></tr>
+      <tr><td>확신도</td><td><span style="background:#00A3A3;color:#fff;padding:2px 8px;border-radius:6px;font-size:12px">텍스트 (대답) 인식하기 (정확도)</span></td><td><code>model.predict_proba([text])</code></td></tr>
+      <tr><td>결과 활용</td><td>말하기 / 모양 바꾸기 블록</td><td><code>print()</code>, 조건문</td></tr>
+    </table>
+  </div>
+
+  <h2 class="sec serif">✅ 3차시 확인 문제</h2>
+  <div class="card"><div class="quiz" data-quiz="q3"></div></div>
+
+  <h2 class="sec serif">🔗 더 알아보기</h2>
+  <div class="card">
+    <div class="links">
+      <a href="https://machinelearningforkids.co.uk/?lang=ko" target="_blank" rel="noopener">🤖 머신러닝 for Kids</a>
+      <a href="https://machinelearningforkids.co.uk/scratch/" target="_blank" rel="noopener">🧩 ML4K 스크래치 에디터</a>
+      <a href="https://brunch.co.kr/@fermat39/78" target="_blank" rel="noopener">📝 아이들도 하는 머신러닝 (한국어 후기)</a>
+      <a href="https://wikidocs.net/128493" target="_blank" rel="noopener">📖 ml4kids 사용법 (위키독스)</a>
+    </div>
+  </div>
+</section>
+<!-- ════════════ 4차시 ════════════ -->
+<section id="t4" class="panel">
+  <div class="les-head">
+    <span class="no">LESSON 04 · 13:00 – 14:00</span>
+    <h2>컴퓨터 비전의 기초 개념과 응용</h2>
+    <p>사람은 사진을 0.1초 만에 알아봅니다. 컴퓨터에게 사진은 <b>그냥 숫자가 빽빽하게 적힌 표</b>일 뿐입니다. 이 시간에는 <b>그 숫자 표에서 어떻게 "고양이"가 나오는지</b>를 직접 클릭하며 확인합니다.</p>
+    <div class="hm"><span>🔢 픽셀</span><span>🪟 합성곱</span><span>🧠 CNN</span><span>👁 실제 응용</span></div>
+  </div>
+
+  <h2 class="sec serif">학습 목표</h2>
+  <div class="goals">
+    <div class="goal"><b>GOAL 1</b><p>이미지가 컴퓨터에게 숫자 배열임을 설명하고, 픽셀 값의 의미를 안다.</p></div>
+    <div class="goal"><b>GOAL 2</b><p>합성곱(필터)이 경계·모양을 찾아내는 원리를 예시로 설명할 수 있다.</p></div>
+    <div class="goal"><b>GOAL 3</b><p>CNN이 선 → 모양 → 사물로 단계적으로 인식한다는 계층 구조를 말할 수 있다.</p></div>
+  </div>
+
+  <h2 class="sec serif">1. 컴퓨터의 눈 — 이미지는 숫자 격자다</h2>
+  <div class="card">
+    <p style="font-size:15px;line-height:1.85">스마트폰으로 찍은 사진 한 장은 <b>가로 4,000 × 세로 3,000 = 1,200만 개의 점(픽셀)</b>으로 되어 있습니다. 컬러 사진은 각 점마다 <b>빨강·초록·파랑(RGB) 세 숫자</b>가 있고, 각각 <b>0~255</b> 값을 가집니다. 즉 사진 한 장 = <b>숫자 3,600만 개</b>입니다. 컴퓨터 비전은 이 숫자 더미에서 의미를 뽑아내는 기술입니다.</p>
+    <table class="simple" style="margin-top:14px">
+      <tr><th style="width:150px">이미지 종류</th><th>컴퓨터가 보는 형태</th><th style="width:150px">숫자 개수</th></tr>
+      <tr><td>흑백 8×8 (오늘 실습)</td><td>0(검정)~16(흰색) 사이 값이 든 8행 8열 표</td><td>64개</td></tr>
+      <tr><td>흑백 28×28 (MNIST)</td><td>0~255 값이 든 28행 28열 표</td><td>784개</td></tr>
+      <tr><td>컬러 224×224 (AI 표준)</td><td>224×224 표가 <b>R·G·B 3장</b> 겹쳐진 것</td><td>150,528개</td></tr>
+      <tr><td>스마트폰 사진</td><td>4000×3000 표 3장</td><td>3,600만 개</td></tr>
+    </table>
+    <div class="ana"><h5>🧵 비유 — 십자수(크로스 스티치)</h5>
+      <p>멀리서 보면 아름다운 그림이지만, 코 하나하나를 들여다보면 <b>"몇 번 실을 여기에 놓아라"</b>라는 지시의 나열일 뿐입니다. 컴퓨터가 보는 사진이 정확히 이 상태입니다. <b>컴퓨터는 그림을 보지 못하고 실 번호만 봅니다.</b> 그래서 컴퓨터 비전의 과제는 "이 실 번호 배열에서 규칙적인 무늬를 찾아내라"가 됩니다.</p>
+    </div>
+  </div>
+
+  <h2 class="sec serif">2. 🎨 직접 그려보기 — 내가 그린 그림을 숫자로 보기</h2>
+  <p class="sec-desc">아래 8×8 칸을 <b>클릭(또는 드래그)</b>해서 숫자 하나를 그려보세요. 오른쪽에 컴퓨터가 실제로 보는 <b>숫자 표</b>가 실시간으로 나타납니다. 이것이 5차시에서 인식할 데이터와 똑같은 형식입니다.</p>
+  <div class="card">
+    <div class="demo-frame">
+      <div class="demo-bar"><i class="r"></i><i class="y"></i><i class="g"></i><span>픽셀 그림판 — 사람이 보는 그림 vs 컴퓨터가 보는 숫자</span></div>
+      <div class="demo-body">
+        <div class="pixwrap">
+          <div>
+            <div style="font-size:13px;font-weight:800;color:var(--navy);margin-bottom:8px;text-align:center">👁 사람이 보는 것</div>
+            <div class="pixgrid" id="pixGrid"></div>
+            <div style="display:flex;gap:8px;justify-content:center;margin-top:12px;flex-wrap:wrap">
+              <button class="btn ghost" style="padding:8px 16px;font-size:13px" onclick="pixClear()">🗑 지우기</button>
+              <button class="btn ghost" style="padding:8px 16px;font-size:13px" onclick="pixSample()">✏️ 숫자 0 예시</button>
+            </div>
+          </div>
+          <div>
+            <div style="font-size:13px;font-weight:800;color:var(--navy);margin-bottom:8px;text-align:center">💻 컴퓨터가 보는 것</div>
+            <div class="pixmat" id="pixMat"></div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="tip"><b>🎯 강사 포인트</b> — 참가자에게 <b>같은 숫자 3을 각자 그리게</b> 한 뒤 숫자 표를 비교하게 하세요. 사람 눈에는 다 "3"이지만 <b>숫자 표는 전부 다릅니다.</b> 그래서 AI에게는 <b>같은 3의 다양한 변형을 많이 보여주는 것</b>이 필요합니다. 이것이 왜 데이터가 수천 장 필요한지에 대한 가장 직관적인 설명입니다.</div>
+  </div>
+
+  <h2 class="sec serif">3. 합성곱 — 작은 창으로 훑어서 특징 찾기</h2>
+  <div class="card">
+    <p style="font-size:15px;line-height:1.85">숫자 표에서 어떻게 "선"이나 "모서리"를 찾을까요? 답은 <b>합성곱(convolution)</b>입니다. <b>3×3짜리 작은 창(=필터, 커널)</b>을 이미지 위에서 한 칸씩 밀면서, 창에 걸친 숫자들을 곱해서 더합니다. 필터의 모양에 따라 <b>세로선만 튀어나오거나, 가로선만 튀어나옵니다.</b></p>
+    <div class="grid2" style="margin-top:14px">
+      <div style="background:#F3F6FB;border-radius:12px;padding:16px">
+        <b style="font-size:13.5px;color:var(--navy)">세로 경계 검출 필터</b>
+        <div class="pixmat" style="margin-top:8px;font-size:14px">[ -1   0   +1 ]
+[ -1   0   +1 ]
+[ -1   0   +1 ]</div>
+        <p style="font-size:13px;color:var(--sub);margin-top:8px">왼쪽은 빼고 오른쪽은 더합니다. <b>좌우 밝기가 급히 바뀌는 곳</b>(=세로 경계)에서 큰 값이 나옵니다.</p>
+      </div>
+      <div style="background:#F3F6FB;border-radius:12px;padding:16px">
+        <b style="font-size:13.5px;color:var(--navy)">가로 경계 검출 필터</b>
+        <div class="pixmat" style="margin-top:8px;font-size:14px">[ -1  -1  -1 ]
+[  0   0   0 ]
+[ +1  +1  +1 ]</div>
+        <p style="font-size:13px;color:var(--sub);margin-top:8px">위는 빼고 아래는 더합니다. <b>위아래 밝기가 급히 바뀌는 곳</b>(=가로 경계)을 찾아냅니다.</p>
+      </div>
+    </div>
+    <div class="demo-frame" style="margin-top:18px">
+      <div class="demo-bar"><i class="r"></i><i class="y"></i><i class="g"></i><span>합성곱 체험 — 위에서 그린 그림에 필터를 적용해 봅니다</span></div>
+      <div class="demo-body">
+        <div style="display:flex;gap:10px;justify-content:center;margin-bottom:16px;flex-wrap:wrap">
+          <button class="btn ghost" style="padding:9px 18px;font-size:13.5px" onclick="applyConv('v')">↕ 세로 경계 찾기</button>
+          <button class="btn ghost" style="padding:9px 18px;font-size:13.5px" onclick="applyConv('h')">↔ 가로 경계 찾기</button>
+          <button class="btn ghost" style="padding:9px 18px;font-size:13.5px" onclick="applyConv('b')">🌫 흐리게 (블러)</button>
+        </div>
+        <div class="pixwrap">
+          <div><div style="font-size:13px;font-weight:800;color:var(--navy);margin-bottom:8px;text-align:center">원본 (8×8)</div><div class="pixgrid" id="convSrc" style="grid-template-columns:repeat(8,34px)"></div></div>
+          <div style="display:flex;align-items:center;font-size:26px;color:var(--knu);font-weight:800">→</div>
+          <div><div style="font-size:13px;font-weight:800;color:var(--navy);margin-bottom:8px;text-align:center">특징맵 (6×6)</div><div class="conv-out" id="convOut"></div></div>
+        </div>
+        <p style="text-align:center;font-size:13px;color:var(--sub);margin-top:14px" id="convDesc">위 그림판에서 그림을 그린 뒤 버튼을 눌러보세요.</p>
+      </div>
+    </div>
+    <div class="ana"><h5>🔦 비유 — 어두운 방을 손전등으로 훑기</h5>
+      <p>깜깜한 방에서 벽 전체를 한눈에 볼 수는 없습니다. 대신 <b>작은 손전등</b>으로 한 뼘씩 훑으면서 "여기 문틀이 있네", "여기 액자가 있네" 하고 파악합니다. 합성곱이 바로 이 손전등입니다.<br><br>
+      더 중요한 점: CNN에서는 <b>이 필터의 숫자들을 사람이 정하지 않습니다.</b> "고양이/개를 구분하려면 어떤 필터가 유용한가"를 <b>학습으로 기계가 직접 찾아냅니다.</b> 딥러닝이 특별한 이유가 여기 있습니다.</p>
+    </div>
+  </div>
+
+  <h2 class="sec serif">4. CNN — 선에서 사물까지, 층층이 쌓아 올리기</h2>
+  <div class="card">
+    <p style="font-size:15px;line-height:1.85">합성곱 한 번으로는 "선"밖에 못 찾습니다. 그래서 <b>합성곱 → 풀링</b>을 여러 번 반복해 층을 쌓습니다. 이것이 <b>CNN(합성곱 신경망)</b>이고, 2012년 AlexNet이 이 구조로 이미지 인식의 판도를 바꿨습니다.</p>
+    <div style="margin:18px 0;overflow-x:auto">
+      <svg viewBox="0 0 900 210" style="min-width:760px;width:100%" role="img" aria-label="CNN 구조: 입력 이미지에서 합성곱과 풀링을 거쳐 완전연결층과 출력으로 이어지는 흐름">
+        <g font-family="Pretendard Variable, sans-serif">
+          <rect x="10" y="60" width="90" height="90" rx="8" fill="#CFE0F7" stroke="#1B4FA0" stroke-width="2"/>
+          <text x="55" y="105" text-anchor="middle" font-size="12" font-weight="800" fill="#0F2A52">입력 이미지</text>
+          <text x="55" y="122" text-anchor="middle" font-size="10.5" fill="#5A6578">숫자 격자</text>
+          <text x="55" y="172" text-anchor="middle" font-size="10" fill="#5A6578">28×28</text>
+          <path d="M105 105 L 135 105" stroke="#1B4FA0" stroke-width="2.5" marker-end="url(#ar)"/>
+          <rect x="140" y="65" width="88" height="80" rx="8" fill="#E8F4F2" stroke="#0E8C7F" stroke-width="2"/>
+          <text x="184" y="98" text-anchor="middle" font-size="12" font-weight="800" fill="#0E8C7F">합성곱 1</text>
+          <text x="184" y="115" text-anchor="middle" font-size="10.5" fill="#5A6578">선·경계 찾기</text>
+          <text x="184" y="172" text-anchor="middle" font-size="10" fill="#5A6578">│ ╱ ─ ╲</text>
+          <path d="M233 105 L 263 105" stroke="#1B4FA0" stroke-width="2.5" marker-end="url(#ar)"/>
+          <rect x="268" y="72" width="72" height="66" rx="8" fill="#FDF1DC" stroke="#B07514" stroke-width="2"/>
+          <text x="304" y="100" text-anchor="middle" font-size="11.5" font-weight="800" fill="#B07514">풀링</text>
+          <text x="304" y="117" text-anchor="middle" font-size="10" fill="#5A6578">크기 절반</text>
+          <path d="M345 105 L 375 105" stroke="#1B4FA0" stroke-width="2.5" marker-end="url(#ar)"/>
+          <rect x="380" y="65" width="88" height="80" rx="8" fill="#E8F4F2" stroke="#0E8C7F" stroke-width="2"/>
+          <text x="424" y="98" text-anchor="middle" font-size="12" font-weight="800" fill="#0E8C7F">합성곱 2</text>
+          <text x="424" y="115" text-anchor="middle" font-size="10.5" fill="#5A6578">모양 찾기</text>
+          <text x="424" y="172" text-anchor="middle" font-size="10" fill="#5A6578">◯ △ ◻</text>
+          <path d="M473 105 L 503 105" stroke="#1B4FA0" stroke-width="2.5" marker-end="url(#ar)"/>
+          <rect x="508" y="65" width="88" height="80" rx="8" fill="#E8F4F2" stroke="#0E8C7F" stroke-width="2"/>
+          <text x="552" y="98" text-anchor="middle" font-size="12" font-weight="800" fill="#0E8C7F">합성곱 3</text>
+          <text x="552" y="115" text-anchor="middle" font-size="10.5" fill="#5A6578">부분 찾기</text>
+          <text x="552" y="172" text-anchor="middle" font-size="10" fill="#5A6578">👁 👃 👂</text>
+          <path d="M601 105 L 631 105" stroke="#1B4FA0" stroke-width="2.5" marker-end="url(#ar)"/>
+          <rect x="636" y="60" width="88" height="90" rx="8" fill="#CFE0F7" stroke="#1B4FA0" stroke-width="2"/>
+          <text x="680" y="98" text-anchor="middle" font-size="11.5" font-weight="800" fill="#0F2A52">완전연결층</text>
+          <text x="680" y="115" text-anchor="middle" font-size="10.5" fill="#5A6578">종합 판단</text>
+          <path d="M729 105 L 759 105" stroke="#1B4FA0" stroke-width="2.5" marker-end="url(#ar)"/>
+          <rect x="764" y="65" width="126" height="80" rx="8" fill="#F2A93B" stroke="#B07514" stroke-width="2"/>
+          <text x="827" y="95" text-anchor="middle" font-size="12" font-weight="800" fill="#4A3200">출력 (확률)</text>
+          <text x="827" y="114" text-anchor="middle" font-size="10.5" fill="#4A3200">고양이 92%</text>
+          <text x="827" y="130" text-anchor="middle" font-size="10.5" fill="#4A3200">개 7% · 기타 1%</text>
+          <text x="450" y="30" text-anchor="middle" font-size="13" font-weight="800" fill="#0F2A52">CNN — 단순한 것에서 복잡한 것으로 쌓아 올리는 인식</text>
+          <defs><marker id="ar" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 z" fill="#1B4FA0"/></marker></defs>
+        </g>
+      </svg>
+    </div>
+    <table class="simple">
+      <tr><th style="width:130px">층</th><th>하는 일</th><th style="width:220px">비유 (얼굴 알아보기)</th></tr>
+      <tr><td><b>합성곱층</b></td><td>필터로 훑어 특징맵을 만듭니다. 층이 깊어질수록 더 복잡한 패턴을 잡습니다.</td><td>선 → 눈썹·콧날 → 눈·코·입 → 얼굴</td></tr>
+      <tr><td><b>풀링층</b></td><td>가장 큰 값만 남겨 크기를 절반으로 줄입니다. 계산량이 줄고, 위치가 조금 달라도 견딥니다.</td><td>"눈이 정확히 어디"보다 "눈이 있다"가 중요</td></tr>
+      <tr><td><b>완전연결층</b></td><td>모든 특징을 종합해 최종 점수를 냅니다.</td><td>"눈2·코1·수염 → 고양이다"라는 판정</td></tr>
+      <tr><td><b>출력층</b></td><td>각 후보에 대한 <b>확률</b>을 내놓습니다. 합은 항상 100%.</td><td>3차시의 "확신도"와 같은 개념</td></tr>
+    </table>
+    <div class="note"><b>📌 결정적 사건</b> — 2012년 이미지넷(ImageNet) 대회에서 CNN 기반 <b>AlexNet</b>이 오류율을 26%에서 16%로 한 번에 10%p 낮췄습니다. 그 전까지는 "고양이의 특징이 무엇인지" 사람이 직접 정의해야 했는데, CNN은 <b>특징 자체를 스스로 발견</b>했습니다. 오늘날 얼굴인식·자율주행·의료영상이 모두 이 사건에서 출발했습니다.</div>
+  </div>
+
+  <h2 class="sec serif">5. 컴퓨터 비전은 지금 어디에 쓰이나</h2>
+  <div class="card">
+    <div class="grid3">
+      <div class="card" style="margin:0;border-top:4px solid var(--knu)"><h4 style="font-weight:800;margin-bottom:6px">🏥 의료</h4><p style="font-size:13.5px;color:var(--sub)">X-ray·CT에서 결절 탐지, 안저 사진으로 당뇨망막병증 선별, 병리 슬라이드 분석. <b>사람 판독의 보조</b>로 쓰입니다.</p></div>
+      <div class="card" style="margin:0;border-top:4px solid var(--teal)"><h4 style="font-weight:800;margin-bottom:6px">🚗 자율주행</h4><p style="font-size:13.5px;color:var(--sub)">차선·보행자·신호등을 실시간 <b>객체 탐지</b>. 위치까지 찾아야 하므로 분류보다 어렵습니다.</p></div>
+      <div class="card" style="margin:0;border-top:4px solid var(--gold)"><h4 style="font-weight:800;margin-bottom:6px">🏭 제조 검사</h4><p style="font-size:13.5px;color:var(--sub)">반도체·디스플레이 표면의 미세 불량 검출. 사람 눈보다 빠르고 지치지 않습니다.</p></div>
+      <div class="card" style="margin:0;border-top:4px solid var(--knu)"><h4 style="font-weight:800;margin-bottom:6px">📱 스마트폰</h4><p style="font-size:13.5px;color:var(--sub)">얼굴 잠금해제, 사진 앱의 인물·장소 자동 분류, 인물 모드의 배경 흐림 처리.</p></div>
+      <div class="card" style="margin:0;border-top:4px solid var(--teal)"><h4 style="font-weight:800;margin-bottom:6px">🌾 농업</h4><p style="font-size:13.5px;color:var(--sub)">드론 영상으로 병충해 조기 발견, 작물 수확 시기 판정, 잡초만 골라 제초.</p></div>
+      <div class="card" style="margin:0;border-top:4px solid var(--gold)"><h4 style="font-weight:800;margin-bottom:6px">♿ 접근성</h4><p style="font-size:13.5px;color:var(--sub)">시각장애인용 장면 설명, 수어 인식, 문서 사진의 글자 읽어주기(OCR).</p></div>
+    </div>
+    <table class="simple" style="margin-top:16px">
+      <tr><th style="width:150px">과제 종류</th><th>질문</th><th style="width:170px">오늘 실습</th></tr>
+      <tr><td><b>이미지 분류</b></td><td>"이 사진은 무엇인가?" — 사진 전체에 라벨 1개</td><td>✅ 5차시 (ML4K·파이썬)</td></tr>
+      <tr><td><b>객체 탐지</b></td><td>"무엇이 <b>어디에</b> 있는가?" — 네모 박스로 위치까지</td><td>개념 소개</td></tr>
+      <tr><td><b>영역 분할</b></td><td>"픽셀 하나하나가 무엇에 속하는가?" — 가장 정밀</td><td>개념 소개</td></tr>
+      <tr><td><b>자세 추정</b></td><td>"사람의 관절이 어디 있는가?" — 운동·재활 분석</td><td>ML4K 심화 기능</td></tr>
+    </table>
+  </div>
+
+  <h2 class="sec serif">6. 🐍 파이썬 트랙 — 합성곱을 손으로 계산해 보기</h2>
+  <div class="track py">
+    <div class="track-head"><span class="ico">🐍</span> 픽셀 값 보기 + 필터 직접 적용 <small>20분</small></div>
+    <div class="track-body">
+      <div class="cbox"><div class="cbox-head"><span>🐍 코드 1 · 이미지를 숫자로 출력하기</span><button class="copy-btn" onclick="copyCode(this)">📋 복사</button></div>
+<pre>from sklearn.datasets import load_digits
+import numpy as np
+
+digits = load_digits()           # 8×8 손글씨 숫자 1,797장
+print("데이터 크기 :", digits.images.shape)
+print("첫 번째 이미지의 정답 :", digits.target[0])
+
+img = digits.images[0]
+print("\n[컴퓨터가 보는 것 — 숫자 표]")
+print(np.array2string(img.astype(int), max_line_width=100))
+
+print("\n[사람이 보는 것 — 같은 데이터를 문자로]")
+for row in img:
+    print("".join("█" if v > 8 else ("▒" if v > 3 else "·") for v in row))</pre>
+<div class="out"><b>실행 결과 — 왼쪽 숫자와 오른쪽 그림이 같은 데이터입니다</b>데이터 크기 : (1797, 8, 8)
+첫 번째 이미지의 정답 : 0
+
+[[ 0  0  5 13  9  1  0  0]      ··▒██···
+ [ 0  0 13 15 10 15  5  0]      ··████▒·
+ [ 0  3 15  2  0 11  8  0]      ··█··█▒·
+ [ 0  4 12  0  0  8  8  0]      ·▒█··▒▒·
+ [ 0  5  8  0  0  9  8  0]      ·▒▒··█▒·
+ [ 0  4 11  0  1 12  7  0]      ·▒█··█▒·
+ [ 0  2 14  5 10 12  0  0]      ··█▒██··
+ [ 0  0  6 13 10  0  0  0]]     ··▒██···</div></div>
+      <div class="cbox"><div class="cbox-head"><span>🐍 코드 2 · 합성곱 직접 구현 (딥러닝의 핵심 연산)</span><button class="copy-btn" onclick="copyCode(this)">📋 복사</button></div>
+<pre>import numpy as np
+from sklearn.datasets import load_digits
+img = load_digits().images[0]
+
+# 세로 경계를 찾는 3×3 필터
+kernel = np.array([[-1, 0, 1],
+                   [-1, 0, 1],
+                   [-1, 0, 1]])
+
+# 3×3 창을 한 칸씩 밀면서 곱하고 더하기 = 합성곱
+out = np.zeros((6, 6))
+for r in range(6):
+    for c in range(6):
+        window = img[r:r+3, c:c+3]      # 창에 걸린 부분
+        out[r, c] = (window * kernel).sum()
+
+print("[특징맵 — 큰 양수 = 왼쪽 경계, 큰 음수 = 오른쪽 경계]")
+print(np.array2string(out.astype(int), max_line_width=100))</pre>
+<div class="out"><b>실행 결과 — 숫자 0의 왼쪽(+)과 오른쪽(-) 테두리가 선명하게 잡힙니다</b>[[ 33  27 -14  -3  -6 -27]
+ [ 40  10 -30  17  11 -34]
+ [ 35 -10 -35  26  24 -28]
+ [ 31 -13 -30  29  22 -29]
+ [ 33  -6 -22  28   4 -33]
+ [ 31  12 -10   6 -14 -24]]</div></div>
+      <div class="tip"><b>🔑 이 코드가 중요한 이유</b> — 방금 여러분은 <b>딥러닝의 가장 핵심 연산을 직접 구현</b>했습니다. 실제 CNN은 이 계산을 <b>필터 수백 개 × 층 수십 개</b>로 반복할 뿐, 원리는 위 8줄과 완전히 같습니다. GPU가 필요한 이유도 <b>이 단순 계산이 어마어마하게 많기 때문</b>입니다.</div>
+    </div>
+  </div>
+
+  <h2 class="sec serif">✅ 4차시 확인 문제</h2>
+  <div class="card"><div class="quiz" data-quiz="q4"></div></div>
+
+  <h2 class="sec serif">🔗 더 알아보기</h2>
+  <div class="card">
+    <div class="links">
+      <a href="https://learnopencv.com/understanding-convolutional-neural-networks-cnn/" target="_blank" rel="noopener">📘 CNN 완전 가이드 (LearnOpenCV)</a>
+      <a href="https://www.image-net.org/" target="_blank" rel="noopener">🖼 ImageNet 프로젝트</a>
+      <a href="https://poloclub.github.io/cnn-explainer/" target="_blank" rel="noopener">🔬 CNN Explainer (시각화 도구)</a>
+    </div>
+  </div>
+</section>
+<!-- ════════════ 5차시 ════════════ -->
+<section id="t5" class="panel">
+  <div class="les-head">
+    <span class="no">LESSON 05 · 14:00 – 15:00</span>
+    <h2>컴퓨터 비전 응용 실습 — 이미지 인식 AI 만들기</h2>
+    <p>4차시에서 원리를 봤으니, 이제 <b>내 얼굴·내 물건을 알아보는 AI</b>를 직접 훈련시킵니다. 웹캠 앞에서 30초만 투자하면 됩니다. 그리고 같은 일을 파이썬으로 하면 <b>정확도 98%</b>가 나오는 것을 확인합니다.</p>
+    <div class="hm"><span>📷 ML4K 이미지</span><span>🖐 Teachable Machine</span><span>🎯 정확도 98%</span><span>🔍 틀린 이유 분석</span></div>
+  </div>
+
+  <h2 class="sec serif">학습 목표</h2>
+  <div class="goals">
+    <div class="goal"><b>GOAL 1</b><p>웹캠으로 이미지 데이터를 수집해 분류 모델을 훈련시킬 수 있다.</p></div>
+    <div class="goal"><b>GOAL 2</b><p>배경·조명·각도가 인식 성능에 미치는 영향을 실험으로 설명할 수 있다.</p></div>
+    <div class="goal"><b>GOAL 3</b><p>파이썬으로 손글씨 숫자를 인식시키고, 틀린 사례를 찾아 원인을 해석할 수 있다.</p></div>
+  </div>
+
+  <h2 class="sec serif">1. 🧩 스크래치 트랙 — ML4K 이미지 프로젝트 "가위바위보 심판"</h2>
+  <div class="track scr">
+    <div class="track-head"><span class="ico">📷</span> 웹캠으로 손 모양을 학습시켜 심판 만들기 <small>30분</small></div>
+    <div class="track-body">
+      <div class="steps">
+        <div class="step"><div><h5>이미지 프로젝트 만들기</h5><p>ML4K → [프로젝트] → [+ 프로젝트 추가] → 이름 <b>가위바위보</b> / 인식 방법 <b>이미지</b> → [만들기].</p></div></div>
+        <div class="step"><div><h5>레이블 3개 만들기</h5><p>[훈련] → <b>가위 / 바위 / 보</b> 세 개의 레이블을 만듭니다.</p></div></div>
+        <div class="step"><div><h5>웹캠으로 사진 모으기 (핵심!)</h5><p>각 레이블의 [+ 데이터 추가] → [웹캠] → 손 모양을 만들고 촬영. <b>레이블당 최소 10장, 권장 15~20장.</b><br><b style="color:#B07514">반드시 다양하게:</b> 각도를 바꾸고, 손을 앞뒤로 움직이고, 왼손·오른손을 섞고, 다른 사람 손도 넣으세요.</p></div></div>
+        <div class="step"><div><h5>학습시키기</h5><p>[학습 &amp; 평가] → [새로운 머신러닝 모델을 훈련시켜보세요]. 이미지 학습은 텍스트보다 오래 걸립니다(수 분).</p></div></div>
+        <div class="step"><div><h5>웹캠으로 테스트</h5><p>학습 완료 후 같은 화면에서 웹캠 테스트. <b>훈련에 쓰지 않은 새 각도</b>로 시험해 보세요.</p></div></div>
+        <div class="step"><div><h5>스크래치에서 심판 완성</h5><p>[만들기] → [스크래치 3] → 아래 블록으로 <b>사용자 vs 컴퓨터</b> 가위바위보 게임을 만듭니다.</p></div></div>
+      </div>
+      <div class="blocks">
+        <div class="blk-cap">▼ 가위바위보 심판 블록</div>
+        <div class="blk-row"><span class="blk ev">🏳 클릭했을 때</span></div>
+        <div class="blk-in">
+          <div class="blk-row"><span class="blk lk">말하기 <span class="slot">카메라에 손을 보여주세요!</span> 2 초</span></div>
+          <div class="blk-row"><span class="blk va">변수 [내손] 을 <span class="blk ml" style="margin:0 4px">이미지 (비디오 이미지) 인식하기 (레이블)</span> 로 정하기</span></div>
+          <div class="blk-row"><span class="blk va">변수 [컴퓨터] 를 <span class="blk op" style="margin:0 4px">리스트 (가위바위보) 의 <span class="blk op" style="margin:0 3px">1 부터 3 사이의 난수</span> 번째 항목</span> 로 정하기</span></div>
+          <div class="blk-row"><span class="blk ct">만약 &lt;(내손) = (컴퓨터)&gt; (이)라면</span></div>
+          <div class="blk-in"><div class="blk-row"><span class="blk lk">말하기 <span class="slot">비겼어요!</span> 2 초</span></div></div>
+          <div class="blk-row" style="margin-left:0">아니면</div>
+          <div class="blk-in">
+            <div class="blk-row"><span class="blk ct">만약 &lt;<span class="blk op" style="margin:0 4px">((내손) = <span class="slot">바위</span>) 그리고 ((컴퓨터) = <span class="slot">가위</span>)</span>&gt; (이)라면</span></div>
+            <div class="blk-in"><div class="blk-row"><span class="blk lk">말하기 <span class="slot">🎉 당신이 이겼어요!</span> 2 초</span></div></div>
+          </div>
+        </div>
+        <div class="blk-cap" style="margin-top:14px">▼ 안전장치 — 확신도가 낮으면 다시 찍게 하기</div>
+        <div class="blk-row"><span class="blk ct">만약 &lt;<span class="blk op" style="margin:0 4px"><span class="blk ml" style="margin:0 3px">이미지 (비디오 이미지) 인식하기 (정확도)</span> &lt; <span class="slot">60</span></span>&gt; (이)라면</span></div>
+        <div class="blk-in"><div class="blk-row"><span class="blk lk">말하기 <span class="slot">손이 잘 안 보여요. 다시 보여주세요!</span> 2 초</span></div></div>
+      </div>
+
+      <div class="note"><b>🔬 반드시 해볼 실험 — "AI는 무엇을 보고 판단했나"</b><br>
+      ① <b>배경 바꾸기</b> : 모든 사진을 흰 벽 앞에서 찍었다면, 다른 배경에서는 갑자기 틀립니다. AI가 <b>손이 아니라 배경을 외운</b> 것입니다.<br>
+      ② <b>조명 바꾸기</b> : 창가에서 찍고 어두운 곳에서 테스트하면 성능이 떨어집니다.<br>
+      ③ <b>다른 사람 손</b> : 내 손만 학습시켰다면 다른 사람 손은 잘 못 맞힙니다.<br>
+      → 이것이 실제 AI 개발에서 가장 자주 터지는 문제이고, 해결책은 하나입니다. <b>다양한 조건의 데이터를 더 모으기.</b></div>
+
+      <div class="tip"><b>🖐 대안 도구 — Teachable Machine</b> — 구글의 <b>teachablemachine.withgoogle.com</b>은 로그인 없이 <b>3분 만에</b> 이미지·소리·자세 모델을 만들 수 있습니다. ML4K 접속이 느릴 때 대안으로 쓰기 좋고, <b>학습 진행 그래프를 보여준다</b>는 장점이 있습니다. [Get Started] → [Image Project] → [Standard image model] → 클래스 이름 입력 → [Hold to Record]로 촬영 → [Train Model] → [Export Model].</div>
+    </div>
+  </div>
+
+  <h2 class="sec serif">2. 🐍 파이썬 트랙 — 손글씨 숫자 98% 인식</h2>
+  <div class="track py">
+    <div class="track-head"><span class="ico">🐍</span> 1,797장으로 훈련하고 실제로 맞는지 검증하기 <small>25분</small></div>
+    <div class="track-body">
+      <div class="cbox"><div class="cbox-head"><span>🐍 코드 1 · 손글씨 숫자 인식기 (전체 과정 한 번에)</span><button class="copy-btn" onclick="copyCode(this)">📋 복사</button></div>
+<pre>from sklearn.datasets import load_digits
+from sklearn.model_selection import train_test_split
+from sklearn.neighbors import KNeighborsClassifier
+from sklearn.metrics import accuracy_score
+import numpy as np
+
+# ① 데이터 준비 (8×8 손글씨 숫자 1,797장)
+digits = load_digits()
+
+# ② 훈련용 80% / 시험용 20%로 분리 ← 2차시에서 배운 그것!
+X_train, X_test, y_train, y_test = train_test_split(
+    digits.data, digits.target, test_size=0.2, random_state=42)
+print(f"훈련 {len(X_train)}장 / 시험 {len(X_test)}장")
+
+# ③ 학습
+model = KNeighborsClassifier(n_neighbors=3)
+model.fit(X_train, y_train)
+
+# ④ 평가 — 한 번도 안 본 데이터로!
+pred = model.predict(X_test)
+print("시험 정확도 :", round(accuracy_score(y_test, pred)*100, 1), "%")
+
+# ⑤ 틀린 것만 골라 보기
+wrong = np.where(pred != y_test)[0]
+print(f"틀린 개수 : {len(wrong)} / {len(y_test)}")
+for i in wrong[:5]:
+    print(f"   정답 {y_test[i]} → AI 예측 {pred[i]}")</pre>
+<div class="out"><b>실행 결과</b>훈련 1437장 / 시험 360장
+시험 정확도 : 98.3 %
+틀린 개수 : 6 / 360
+   정답 9 → AI 예측 3
+   정답 7 → AI 예측 9
+   정답 9 → AI 예측 4</div></div>
+      <div class="ana"><h5>🤔 틀린 것을 보면 AI가 보인다</h5>
+        <p>AI가 <b>9를 3으로</b>, <b>7을 9로</b> 착각했습니다. 우연이 아닙니다. <b>사람도 급하게 쓰면 헷갈리는 조합</b>입니다. 9와 3은 위쪽 둥근 부분이, 7과 9는 세로획이 비슷합니다.<br><br>
+        AI를 개선할 때 가장 먼저 하는 일은 <b>"틀린 사례를 모아서 보는 것"</b>입니다. 여기서 "9와 3 데이터를 더 모으자", "가로획을 강조하는 필터를 넣자" 같은 개선 방향이 나옵니다. <b>정확도 숫자 하나보다, 무엇을 틀렸는지가 훨씬 많은 것을 알려줍니다.</b></p>
+      </div>
+      <div class="cbox"><div class="cbox-head"><span>🐍 코드 2 · 틀린 이미지를 눈으로 확인하기 (그림 출력)</span><button class="copy-btn" onclick="copyCode(this)">📋 복사</button></div>
+<pre>import matplotlib.pyplot as plt
+
+# 위 코드에 이어서 실행하세요
+fig, axes = plt.subplots(1, 5, figsize=(11, 2.6))
+for ax, i in zip(axes, wrong[:5]):
+    ax.imshow(X_test[i].reshape(8, 8), cmap='gray_r')
+    ax.set_title(f"real {y_test[i]} / AI {pred[i]}", fontsize=10)
+    ax.axis('off')
+plt.tight_layout()
+plt.show()</pre>
+<div class="out"><b>결과</b>흐릿하고 삐뚤어진 숫자 5장이 나타납니다.
+<b>사람이 봐도 헷갈리는 글씨</b>임을 눈으로 확인할 수 있습니다.</div></div>
+      <div class="cbox"><div class="cbox-head"><span>🐍 코드 3 · 내 사진으로 하기 — ML4K 이미지 프로젝트의 파이썬 버전</span><button class="copy-btn" onclick="copyCode(this)">📋 복사</button></div>
+<pre># Colab에서 실행 : 사진을 직접 업로드해서 분류기를 만듭니다.
+# 파일 이름을 "사과_1.jpg", "바나나_1.jpg" 처럼 [이름]_[번호] 형식으로 저장해 두세요.
+from google.colab import files
+from PIL import Image
+from sklearn.neighbors import KNeighborsClassifier
+import numpy as np, os
+
+print("각 종류마다 사진 5장 이상 업로드하세요 (파일명 = 이름_번호.jpg)")
+uploaded = files.upload()
+
+X, y = [], []
+for name in uploaded.keys():
+    img = Image.open(name).convert("RGB").resize((32, 32))  # 크기 통일
+    X.append(np.array(img).flatten() / 255.0)              # 숫자 한 줄로 펼치기
+    y.append(name.split("_")[0])                            # 파일명 앞부분 = 정답
+
+X = np.array(X)
+print("데이터 모양 :", X.shape, "→ 사진 1장 =", X.shape[1], "개 숫자")
+
+model = KNeighborsClassifier(n_neighbors=3).fit(X, y)
+print("학습 완료! 이제 새 사진으로 테스트하세요.")
+
+print("\n테스트할 사진 1장을 업로드하세요")
+test = files.upload()
+for name in test.keys():
+    img = Image.open(name).convert("RGB").resize((32, 32))
+    v = np.array(img).flatten().reshape(1, -1) / 255.0
+    probs = dict(zip(model.classes_, model.predict_proba(v)[0]))
+    print(f"{name} → {model.predict(v)[0]}  {probs}")</pre>
+<div class="out"><b>실행 결과 예시</b>데이터 모양 : (12, 3072) → 사진 1장 = 3072 개 숫자
+학습 완료! 이제 새 사진으로 테스트하세요.
+apple_2.png → apple  {'apple': 1.0, 'banana': 0.0}</div></div>
+      <div class="tip"><b>🔍 여기서 꼭 짚을 것</b> — 32×32 컬러 사진 한 장이 <b>3,072개의 숫자</b>가 됩니다(32×32×3). 4차시에서 배운 "이미지는 숫자 격자"가 코드로 확인되는 순간입니다. 그리고 ML4K의 [웹캠으로 촬영] 버튼이 여기서는 <code>files.upload()</code>, [훈련시키기]가 <code>.fit()</code>입니다. <b>도구만 다를 뿐 완전히 같은 절차</b>입니다.</div>
+    </div>
+  </div>
+
+  <h2 class="sec serif">3. 성능을 올리는 5가지 방법 (프로젝트에 바로 적용)</h2>
+  <div class="card">
+    <table class="simple">
+      <tr><th style="width:170px">방법</th><th>구체적으로</th><th style="width:110px">효과</th></tr>
+      <tr><td><b>① 데이터 더 모으기</b></td><td>가장 확실하고 가장 먼저 해야 할 것. 레이블당 10장 → 30장만 되어도 체감이 다릅니다.</td><td>⭐⭐⭐⭐⭐</td></tr>
+      <tr><td><b>② 다양성 확보</b></td><td>각도·조명·배경·사람을 바꿔가며 촬영. 실제 사용 환경과 같은 조건이 특히 중요합니다.</td><td>⭐⭐⭐⭐⭐</td></tr>
+      <tr><td><b>③ 레이블 균형</b></td><td>가위 30장 : 바위 5장이면 대부분 "가위"로 답합니다. 개수를 비슷하게 맞추세요.</td><td>⭐⭐⭐⭐</td></tr>
+      <tr><td><b>④ 애매한 데이터 정리</b></td><td>사람이 봐도 애매한 사진은 오히려 방해가 됩니다. 잘못 넣은 사진은 삭제하세요.</td><td>⭐⭐⭐</td></tr>
+      <tr><td><b>⑤ "모름" 레이블 추가</b></td><td><b>배경만 찍은 사진</b>을 "없음" 레이블로 넣으면, 손이 없을 때 억지 판정을 막을 수 있습니다.</td><td>⭐⭐⭐⭐</td></tr>
+    </table>
+    <div class="note"><b>💡 현업의 격언</b> — "Garbage in, garbage out." 모델을 바꾸는 것보다 <b>데이터를 손보는 것</b>이 성능 개선에 훨씬 효과적입니다. 실제 AI 프로젝트 시간의 <b>70~80%가 데이터 준비</b>에 쓰입니다.</div>
+  </div>
+
+  <h2 class="sec serif">✅ 5차시 확인 문제</h2>
+  <div class="card"><div class="quiz" data-quiz="q5"></div></div>
+
+  <h2 class="sec serif">🔗 더 알아보기</h2>
+  <div class="card">
+    <div class="links">
+      <a href="https://teachablemachine.withgoogle.com/" target="_blank" rel="noopener">🖐 Teachable Machine</a>
+      <a href="https://quickdraw.withgoogle.com/" target="_blank" rel="noopener">✏️ Quick, Draw! (낙서 인식 체험)</a>
+      <a href="https://machinelearningforkids.co.uk/?lang=ko" target="_blank" rel="noopener">🤖 머신러닝 for Kids</a>
+    </div>
+  </div>
+</section>
+<!-- ════════════ 6차시 ════════════ -->
+<section id="t6" class="panel">
+  <div class="les-head">
+    <span class="no">LESSON 06 · 15:00 – 16:00</span>
+    <h2>생성형 AI의 개념과 특징</h2>
+    <p>3~5차시의 AI는 <b>"분류"</b>만 했습니다. ChatGPT·Claude는 <b>없던 문장을 새로 만들어냅니다.</b> 무엇이 달라진 걸까요? 놀랍게도 그 핵심은 <b>"다음 단어 맞히기"</b> 하나입니다. 직접 확인해 봅시다.</p>
+    <div class="hm"><span>🎲 다음 단어 예측</span><span>🔤 토큰</span><span>👻 환각</span><span>✍️ 프롬프트 4원칙</span></div>
+  </div>
+
+  <h2 class="sec serif">학습 목표</h2>
+  <div class="goals">
+    <div class="goal"><b>GOAL 1</b><p>판별형 AI와 생성형 AI의 차이를 구조적으로 설명할 수 있다.</p></div>
+    <div class="goal"><b>GOAL 2</b><p>대형 언어모델이 "다음 토큰 확률 예측"으로 작동함을 이해하고 환각을 설명할 수 있다.</p></div>
+    <div class="goal"><b>GOAL 3</b><p>프롬프트 4원칙을 적용해 원하는 결과를 얻는 질문을 쓸 수 있다.</p></div>
+  </div>
+
+  <h2 class="sec serif">1. 판별형 vs 생성형 — 무엇이 달라졌나</h2>
+  <div class="card">
+    <table class="simple">
+      <tr><th style="width:130px">구분</th><th>판별형 AI (3~5차시)</th><th>생성형 AI (이번 차시)</th></tr>
+      <tr><td><b>하는 일</b></td><td>주어진 것을 <b>고른다</b> — "칭찬인가 불평인가"</td><td>없던 것을 <b>만든다</b> — "후기를 하나 써줘"</td></tr>
+      <tr><td><b>답의 개수</b></td><td>정해진 레이블 중 하나 (닫힌 문제)</td><td>무한히 많음 (열린 문제)</td></tr>
+      <tr><td><b>같은 입력</b></td><td>항상 같은 답</td><td>매번 조금씩 다른 답</td></tr>
+      <tr><td><b>학습 데이터</b></td><td>내가 만든 수십~수천 건</td><td>인터넷 규모의 수조 개 단어</td></tr>
+      <tr><td><b>대표 예</b></td><td>스팸 분류, 얼굴 인식, 불량 검출</td><td>ChatGPT, Claude, Gemini, 이미지 생성</td></tr>
+      <tr><td><b>평가 방법</b></td><td>정확도 숫자로 명확히</td><td>"좋은 답"의 기준이 주관적 — 사람이 판단</td></tr>
+    </table>
+    <div class="ana"><h5>🎼 비유 — 음악 평론가 vs 작곡가</h5>
+      <p><b>판별형 AI</b>는 음악 평론가입니다. 곡을 듣고 "이건 재즈, 저건 록"이라고 <b>분류</b>합니다.<br>
+      <b>생성형 AI</b>는 작곡가입니다. "재즈풍 곡 하나 만들어줘"라고 하면 <b>세상에 없던 곡</b>을 씁니다.<br><br>
+      그런데 이 작곡가는 <b>음악 이론을 이해해서 작곡하는 게 아닙니다.</b> 수백만 곡을 들으며 "이 음 다음에는 보통 이 음이 온다"는 <b>통계적 감각</b>만 익힌 상태입니다. 이 사실이 다음 절의 환각 문제로 곧장 이어집니다.</p>
+    </div>
+  </div>
+
+  <h2 class="sec serif">2. 🎲 원리 체험 — "다음 단어 맞히기"가 전부다</h2>
+  <p class="sec-desc">대형 언어모델의 작동 원리는 놀랄 만큼 단순합니다. <b>"지금까지의 문장 다음에 올 단어를 확률로 고른다."</b> 이것을 계속 반복할 뿐입니다. 아래에서 여러분이 직접 <b>언어모델이 되어</b> 문장을 생성해 보세요.</p>
+  <div class="card">
+    <div class="demo-frame">
+      <div class="demo-bar"><i class="r"></i><i class="y"></i><i class="g"></i><span>미니 언어모델 — 다음 단어를 확률로 고르기</span></div>
+      <div class="demo-body">
+        <div style="font-size:13.5px;color:var(--sub);margin-bottom:10px">📚 <b>이 모델이 학습한 전체 데이터</b> (딱 6문장 — 진짜 GPT는 수조 단어를 봅니다)</div>
+        <div style="background:#F3F6FB;border-radius:10px;padding:13px 16px;font-size:13.5px;line-height:1.85;color:var(--navy);margin-bottom:16px">
+          옛날 옛적에 작은 마을에 지혜로운 할머니가 살았어요<br>
+          할머니는 매일 아침 마을 사람들에게 이야기를 들려주었어요<br>
+          마을 사람들은 할머니의 이야기를 좋아했어요<br>
+          어느 날 할머니가 마을을 떠났어요<br>
+          마을 사람들은 할머니를 그리워했어요<br>
+          그래서 사람들은 서로에게 이야기를 들려주기 시작했어요
+        </div>
+        <div class="ngram-out" id="ngOut"></div>
+        <div style="font-size:13px;color:var(--sub);margin:12px 0 4px;font-weight:700">👇 다음에 올 단어 후보 (숫자 = 학습 데이터에서 나온 확률)</div>
+        <div class="cands" id="ngCands"></div>
+        <div style="display:flex;gap:10px;justify-content:center;margin-top:16px;flex-wrap:wrap">
+          <button class="btn teal" onclick="ngAuto()">🤖 AI에게 맡기기 (자동 완성)</button>
+          <button class="btn ghost" onclick="ngReset()">↺ 처음부터</button>
+        </div>
+      </div>
+    </div>
+    <div class="tip"><b>🎯 방금 무슨 일이 일어났나</b> — 여러분은 <b>의미를 이해하지 않고</b> 오직 "어느 단어가 자주 따라왔는가"만 보고 문장을 만들었습니다. GPT·Claude도 <b>규모만 다를 뿐 같은 일</b>을 합니다. 다만 학습 데이터가 <b>수조 단어</b>이고, 앞 단어 하나가 아니라 <b>문장 전체를 동시에</b> 보며(=2017년 트랜스포머의 <b>어텐션</b>), 확률 계산이 훨씬 정교합니다. 그래서 결과가 마치 이해한 것처럼 보입니다.</div>
+  </div>
+
+  <h2 class="sec serif">3. 토큰 · 확률 · 온도 — 알아두면 쓸모 있는 3가지</h2>
+  <div class="card">
+    <div class="grid3">
+      <div class="card" style="margin:0;border-top:4px solid var(--knu)"><h4 style="font-weight:800;margin-bottom:6px">🔤 토큰 (Token)</h4><p style="font-size:13.5px;color:var(--sub)">AI가 글을 자르는 단위. 단어보다 작습니다. 영어는 대략 <b>1토큰 ≈ 4글자</b>, 한국어는 <b>1글자 ≈ 1~2토큰</b>. AI 서비스 요금이 "토큰당 얼마"인 이유이고, 한국어가 영어보다 비싸게 계산되는 이유이기도 합니다.</p></div>
+      <div class="card" style="margin:0;border-top:4px solid var(--teal)"><h4 style="font-weight:800;margin-bottom:6px">🎲 확률 분포</h4><p style="font-size:13.5px;color:var(--sub)">AI는 매 순간 <b>수만 개 토큰 각각의 확률</b>을 계산합니다. 항상 1등만 고르면 문장이 단조로워서, <b>확률에 따라 무작위로</b> 뽑습니다. 같은 질문에 매번 다른 답이 오는 이유입니다.</p></div>
+      <div class="card" style="margin:0;border-top:4px solid var(--gold)"><h4 style="font-weight:800;margin-bottom:6px">🌡 온도 (Temperature)</h4><p style="font-size:13.5px;color:var(--sub)">낮으면(0에 가까움) 안전하고 반복적인 답, 높으면 창의적이지만 엉뚱한 답. <b>보고서·요약은 낮게, 아이디어 발상은 높게</b>가 원칙입니다.</p></div>
+    </div>
+  </div>
+
+  <h2 class="sec serif">4. 👻 환각 (Hallucination) — 가장 중요한 한계</h2>
+  <div class="card">
+    <p style="font-size:15px;line-height:1.85"><b>환각</b>이란 AI가 <b>사실이 아닌 내용을 아주 그럴듯하게, 자신 있게</b> 말하는 현상입니다. 거짓말하려는 의도가 있는 게 아닙니다. AI는 <b>"참인 문장"이 아니라 "그럴듯한 문장"</b>을 만들도록 학습되었기 때문에, 사실 여부를 스스로 판별할 수단이 애초에 없습니다.</p>
+    <table class="simple" style="margin-top:14px">
+      <tr><th style="width:190px">실제 사례</th><th>무슨 일이 있었나</th></tr>
+      <tr><td><b>미국 변호사 사건</b><br><span style="font-size:12px;color:var(--sub)">2023년</span></td><td>변호사가 ChatGPT로 판례를 조사해 법원에 제출했는데, <b>인용한 판례가 전부 존재하지 않는 가짜</b>였습니다. 사건 번호와 인용문까지 그럴듯하게 지어냈습니다. 법원은 제재를 내렸습니다.</td></tr>
+      <tr><td><b>피자에 접착제</b></td><td>구글 AI 요약이 "치즈가 잘 붙게 하려면 <b>무독성 접착제</b>를 넣으라"고 답했습니다. 2013년 커뮤니티의 <b>농담 글</b>을 사실로 학습한 결과였습니다.</td></tr>
+      <tr><td><b>존재하지 않는 논문·URL</b></td><td>가장 흔한 유형. 저자·연도·학회명이 완벽한 형식으로 나오지만 검색하면 없습니다. <b>형식은 학습했지만 실재 여부는 모르기 때문</b>입니다.</td></tr>
+    </table>
+    <div class="ana"><h5>🗣 비유 — 세상 모든 책을 읽었지만 기억이 흐릿한 달변가</h5>
+      <p>어떤 주제를 물어도 막힘없이 말하고, 말투와 형식이 완벽합니다. 그런데 <b>세부 사실을 정확히 기억하지 못할 때도 말을 멈추지 않고</b> 자연스럽게 이어 붙입니다. 본인은 지어냈다는 자각조차 없습니다.<br><br>
+      그래서 원칙은 하나입니다. <b>"AI는 초안을 쓰는 데 쓰고, 사실 확인은 사람이 한다."</b> 특히 <b>숫자·날짜·인용·법조문·의학 정보</b>는 반드시 원출처를 직접 확인해야 합니다.</p>
+    </div>
+    <div class="note"><b>🛡 환각을 줄이는 실전 방법 5가지</b><br>
+    ① <b>자료를 직접 첨부</b>하고 "첨부한 문서 안에서만 답하라"고 지시 (RAG의 원리)<br>
+    ② <b>"모르면 모른다고 답하라"</b>를 프롬프트에 명시<br>
+    ③ <b>출처를 함께 요구</b>하고, 그 출처를 직접 열어 확인<br>
+    ④ 중요한 답은 <b>다른 AI나 검색으로 교차 검증</b><br>
+    ⑤ 최신 정보는 <b>웹 검색 기능이 켜진 상태</b>에서 질문</div>
+  </div>
+
+  <h2 class="sec serif">5. ✍️ 프롬프트 4원칙 — 좋은 질문이 좋은 답을 만든다</h2>
+  <div class="card">
+    <div class="steps">
+      <div class="step"><div><h5>역할을 준다 (Role)</h5><p>"당신은 <b>대학교 1학년 교양 수업을 담당하는 컴퓨터공학 교수</b>입니다." → 답변의 어휘 수준과 관점이 즉시 달라집니다.</p></div></div>
+      <div class="step"><div><h5>맥락을 준다 (Context)</h5><p>"대상은 <b>비전공 1학년 40명</b>이고, 수업 시간은 <b>50분</b>, 컴퓨터실에서 진행합니다." → AI는 여러분의 상황을 모릅니다. 알려주지 않으면 일반론만 나옵니다.</p></div></div>
+      <div class="step"><div><h5>형식을 지정한다 (Format)</h5><p>"<b>표로 정리</b>하고, 각 항목은 <b>2문장 이내</b>, 마지막에 <b>3줄 요약</b>을 붙여줘." → 후처리 시간이 확 줄어듭니다.</p></div></div>
+      <div class="step"><div><h5>예시를 준다 (Example)</h5><p>"<b>이런 식으로</b>: 개념 → 비유 → 실습 활동 순서" → 가장 효과가 큰 기법입니다. 말로 설명하기 어려운 요구는 <b>예시 하나</b>가 해결합니다.</p></div></div>
+    </div>
+    <div class="pbox"><div class="pbox-head"><span>✍️ 실습 프롬프트 — 4원칙을 모두 적용한 예시 ([ ]만 바꾸세요)</span><button class="copy-btn" onclick="copyPrompt(this)">📋 복사</button></div>
+<pre>[역할] 너는 대학 교양 강의를 10년간 해온 인공지능 전공 교수야.
+
+[맥락] 나는 [비전공 1학년 40명]을 대상으로 [50분]짜리 수업에서
+"머신러닝의 학습 원리"를 설명해야 해.
+학생들은 수학을 어려워하고, 수식이 나오면 집중력이 떨어져.
+컴퓨터실이라 실습은 가능해.
+
+[형식] 아래 형식의 표로 정리해줘.
+| 시간 | 활동 | 강사가 할 말(핵심 문장) | 학생 활동 |
+표 아래에는 "이 수업에서 학생이 반드시 가져가야 할 한 문장"을 적어줘.
+
+[예시] 이런 흐름이면 좋겠어:
+  일상 사례로 호기심 유발 → 개념 설명(수식 없이 비유로)
+  → 5분 실습 → 학생이 스스로 설명해보기
+
+수식은 쓰지 말고, 비유는 일상 경험에서 가져와줘.
+확실하지 않은 내용은 "확실하지 않음"이라고 표시해줘.</pre></div>
+    <div class="tip"><b>🎯 실습 방법</b> — ① 먼저 <b>"머신러닝 수업 계획 짜줘"</b>라고만 짧게 물어보세요. ② 그다음 위의 4원칙 프롬프트를 보내세요. ③ <b>두 답변을 나란히 놓고 비교</b>하면, 프롬프트의 위력을 설명이 아니라 <b>경험</b>으로 알게 됩니다.</div>
+  </div>
+
+  <h2 class="sec serif">6. 🧩 스크래치 트랙 — 생성형 AI 흉내내기</h2>
+  <div class="track scr">
+    <div class="track-head"><span class="ico">🧩</span> 리스트로 "다음 단어 예측" 문장 생성기 만들기 <small>15분</small></div>
+    <div class="track-body">
+      <p style="font-size:14.5px;color:var(--sub);margin-bottom:6px">스크래치에는 GPT가 없지만, <b>확률로 다음 단어를 고르는 원리</b>는 리스트와 난수 블록으로 그대로 재현할 수 있습니다. 위 시뮬레이터를 블록으로 만드는 실습입니다.</p>
+      <div class="blocks">
+        <div class="blk-cap">▼ 준비: 리스트 3개 만들기 — [주어] [행동] [장소]</div>
+        <div class="blk-row"><span class="blk va">리스트 [주어] : <span class="slot">할머니가</span> <span class="slot">마을 사람들이</span> <span class="slot">아이들이</span></span></div>
+        <div class="blk-row"><span class="blk va">리스트 [행동] : <span class="slot">이야기를 들려주었어요</span> <span class="slot">노래를 불렀어요</span> <span class="slot">그림을 그렸어요</span></span></div>
+        <div class="blk-cap" style="margin-top:12px">▼ 문장 생성 블록</div>
+        <div class="blk-row"><span class="blk ev">🏳 클릭했을 때</span></div>
+        <div class="blk-in">
+          <div class="blk-row"><span class="blk ct">5 번 반복하기</span></div>
+          <div class="blk-in">
+            <div class="blk-row"><span class="blk va">변수 [문장] 을 <span class="blk op" style="margin:0 4px">(주어의 <span class="blk op" style="margin:0 3px">1~3 사이 난수</span> 번째 항목) 와 (행동의 <span class="blk op" style="margin:0 3px">1~3 사이 난수</span> 번째 항목) 결합하기</span> 로 정하기</span></div>
+            <div class="blk-row"><span class="blk lk">말하기 (문장) 2 초</span></div>
+          </div>
+        </div>
+      </div>
+      <div class="note"><b>💬 토론 질문</b> — 이렇게 만든 문장은 <b>말이 되지만 의미는 없습니다.</b> "그럼 ChatGPT는 이것과 무엇이 다른가?" 답: <b>확률을 훨씬 정교하게 계산하고(수조 단어 학습), 앞 문맥 전체를 본다</b>는 점입니다. 그러나 <b>"의미를 이해한다"는 점에서는 본질적으로 같은 방식</b>이라는 점이 이 실습의 핵심 메시지입니다.</div>
+    </div>
+  </div>
+
+  <h2 class="sec serif">7. 🐍 파이썬 트랙 — 15줄로 만드는 미니 언어모델</h2>
+  <div class="track py">
+    <div class="track-head"><span class="ico">🐍</span> 마르코프 체인으로 다음 단어 예측하기 <small>20분</small></div>
+    <div class="track-body">
+      <div class="cbox"><div class="cbox-head"><span>🐍 코드 1 · 다음 단어 확률 계산 + 문장 생성</span><button class="copy-btn" onclick="copyCode(this)">📋 복사</button></div>
+<pre>import random
+from collections import defaultdict, Counter
+
+# ① 학습 데이터 (진짜 GPT는 이걸 수조 단어 규모로 씁니다)
+text = """옛날 옛적에 작은 마을에 지혜로운 할머니가 살았어요
+할머니는 매일 아침 마을 사람들에게 이야기를 들려주었어요
+마을 사람들은 할머니의 이야기를 좋아했어요
+어느 날 할머니가 마을을 떠났어요
+마을 사람들은 할머니를 그리워했어요
+그래서 사람들은 서로에게 이야기를 들려주기 시작했어요"""
+
+# ② "학습" = 어떤 단어 다음에 어떤 단어가 왔는지 세기
+words = text.split()
+table = defaultdict(list)
+for now, nxt in zip(words, words[1:]):
+    table[now].append(nxt)
+
+print("'마을' 다음에 올 수 있는 단어 :", dict(Counter(table['마을'])))
+
+# ③ "생성" = 확률에 따라 다음 단어를 뽑기를 반복
+random.seed(7)
+current = "마을"
+result = [current]
+for _ in range(12):
+    if current not in table:
+        break
+    current = random.choice(table[current])   # ← 확률적으로 선택
+    result.append(current)
+
+print("생성 결과 :", " ".join(result))</pre>
+<div class="out"><b>실행 결과</b>'마을' 다음에 올 수 있는 단어 : {'사람들에게': 1, '사람들은': 2}
+생성 결과 : 마을 사람들은 할머니의 이야기를 들려주기 시작했어요</div></div>
+      <div class="tip"><b>🔍 seed를 바꿔보세요</b> — <code>random.seed(7)</code>의 숫자를 바꾸면 <b>매번 다른 문장</b>이 나옵니다. ChatGPT가 같은 질문에 매번 다르게 답하는 이유가 정확히 이것입니다. 그리고 학습 데이터에 없던 단어를 넣으면 <b>아무 말도 못 합니다</b> — 3차시에서 "둘 다 아닌 문장"을 넣었을 때와 같은 한계입니다.</div>
+      <div class="cbox"><div class="cbox-head"><span>🐍 코드 2 · 학습 데이터를 늘리면 문장이 좋아진다 (직접 실험)</span><button class="copy-btn" onclick="copyCode(this)">📋 복사</button></div>
+<pre># 위 코드에 이어서 — 여러분이 좋아하는 글을 넣어보세요!
+my_text = """여기에 좋아하는 노래 가사나 소설 한 단락을 붙여넣으세요
+문장이 많을수록 생성 결과가 자연스러워집니다
+같은 단어가 여러 번 나올수록 연결이 풍부해집니다"""
+
+words2 = my_text.split()
+table2 = defaultdict(list)
+for now, nxt in zip(words2, words2[1:]):
+    table2[now].append(nxt)
+
+start = words2[0]
+out = [start]
+cur = start
+for _ in range(20):
+    if cur not in table2:
+        break
+    cur = random.choice(table2[cur])
+    out.append(cur)
+print(" ".join(out))
+
+print(f"\n학습한 단어 종류 : {len(table2)}개")
+print("→ GPT-4급 모델은 이 표가 수천억 개 규모입니다.")</pre>
+<div class="out"><b>실습 포인트</b>데이터가 많을수록 문장이 자연스러워집니다.
+"모델 크기 = 성능"이라는 말의 의미를 몸으로 알 수 있습니다.</div></div>
+    </div>
+  </div>
+
+  <h2 class="sec serif">✅ 6차시 확인 문제</h2>
+  <div class="card"><div class="quiz" data-quiz="q6"></div></div>
+
+  <h2 class="sec serif">🔗 더 알아보기</h2>
+  <div class="card">
+    <div class="links">
+      <a href="https://www.ibm.com/think/topics/ai-hallucinations" target="_blank" rel="noopener">👻 AI 환각이란 (IBM)</a>
+      <a href="https://arxiv.org/abs/1706.03762" target="_blank" rel="noopener">📄 Attention Is All You Need (트랜스포머 원논문)</a>
+      <a href="https://platform.openai.com/tokenizer" target="_blank" rel="noopener">🔤 토크나이저 체험</a>
+      <a href="https://poloclub.github.io/transformer-explainer/" target="_blank" rel="noopener">🔬 Transformer Explainer (시각화)</a>
+    </div>
+  </div>
+</section>
+<!-- ════════════ 7차시 ════════════ -->
+<section id="t7" class="panel">
+  <div class="les-head">
+    <span class="no">LESSON 07 · 16:00 – 17:00</span>
+    <h2>AI 프로젝트 구현 ① — 기획 · 데이터 · 학습</h2>
+    <p>배운 것을 모아 <b>내 프로젝트</b>를 만듭니다. 이 시간에는 <b>기획서 작성 → 레이블 설계 → 데이터 수집 → 모델 훈련</b>까지 진행합니다. 8차시에는 이 모델을 프로그램으로 완성합니다.</p>
+    <div class="hm"><span>📝 기획 워크시트</span><span>🏷 레이블 설계</span><span>📦 데이터 수집</span><span>🎓 모델 훈련</span></div>
+  </div>
+
+  <h2 class="sec serif">학습 목표</h2>
+  <div class="goals">
+    <div class="goal"><b>GOAL 1</b><p>해결하고 싶은 문제를 AI가 풀 수 있는 형태(분류 문제)로 바꿀 수 있다.</p></div>
+    <div class="goal"><b>GOAL 2</b><p>레이블을 겹치지 않게 설계하고 균형 있는 데이터를 모을 수 있다.</p></div>
+    <div class="goal"><b>GOAL 3</b><p>훈련한 모델을 평가하고, 부족한 부분을 데이터로 보완할 수 있다.</p></div>
+  </div>
+
+  <h2 class="sec serif">1. 좋은 AI 프로젝트의 조건</h2>
+  <div class="card">
+    <table class="simple">
+      <tr><th style="width:120px">조건</th><th>설명</th><th style="width:280px">좋은 예 / 나쁜 예</th></tr>
+      <tr><td><b>① 분류 문제로 바뀌는가</b></td><td>AI가 잘하는 것은 <b>"이 중에 무엇인가"</b>입니다. 열린 질문은 오늘 도구로는 어렵습니다.</td><td>✅ "이 문의는 어느 부서로 보낼까"<br>❌ "우리 학교를 발전시켜줘"</td></tr>
+      <tr><td><b>② 레이블이 명확한가</b></td><td>사람 3명이 같은 데이터를 보고 <b>같은 레이블</b>을 붙일 수 있어야 합니다.</td><td>✅ 가위/바위/보<br>❌ 예쁨/보통/못생김</td></tr>
+      <tr><td><b>③ 데이터를 지금 모을 수 있는가</b></td><td>1시간 안에 <b>레이블당 10~20개</b>를 모을 수 있어야 오늘 끝납니다.</td><td>✅ 내가 쓴 문장, 웹캠 사진<br>❌ 병원 진료 기록</td></tr>
+      <tr><td><b>④ 틀려도 안전한가</b></td><td>AI는 반드시 틀립니다. <b>틀렸을 때 피해가 큰 일</b>은 연습용으로 부적합합니다.</td><td>✅ 분리수거 도우미<br>❌ 질병 진단, 합격 판정</td></tr>
+    </table>
+    <div class="note"><b>💡 오늘 안에 끝나는 규모</b> — <b>레이블 2~4개</b>, <b>레이블당 데이터 10~20개</b>. 욕심을 내면 8차시에 완성하지 못합니다. <b>작게 만들어 끝까지 가는 것</b>이 크게 시작해 중간에 멈추는 것보다 훨씬 많이 배웁니다.</div>
+  </div>
+
+  <h2 class="sec serif">2. 💡 프로젝트 아이디어 12선</h2>
+  <div class="card">
+    <div class="grid3">
+      <div class="card" style="margin:0;border-left:4px solid var(--gold)"><span class="badge b-gold">텍스트</span><h4 style="font-weight:800;margin:8px 0 4px;font-size:15px">학과 문의 자동 분류기</h4><p style="font-size:13px;color:var(--sub)">레이블: 수강신청 / 장학금 / 졸업요건 / 시설. 학생 문의를 담당 부서로 자동 안내.</p></div>
+      <div class="card" style="margin:0;border-left:4px solid var(--gold)"><span class="badge b-gold">텍스트</span><h4 style="font-weight:800;margin:8px 0 4px;font-size:15px">감정 일기 도우미</h4><p style="font-size:13px;color:var(--sub)">레이블: 기쁨 / 슬픔 / 화남 / 불안. 오늘 쓴 일기의 감정을 읽고 맞춤 위로 문구를 보여줌.</p></div>
+      <div class="card" style="margin:0;border-left:4px solid var(--gold)"><span class="badge b-gold">텍스트</span><h4 style="font-weight:800;margin:8px 0 4px;font-size:15px">악성 댓글 필터</h4><p style="font-size:13px;color:var(--sub)">레이블: 정상 / 비난 / 욕설. 게시판에 올리기 전에 경고. 1차시 스팸 실습의 완성판.</p></div>
+      <div class="card" style="margin:0;border-left:4px solid var(--gold)"><span class="badge b-gold">텍스트</span><h4 style="font-weight:800;margin:8px 0 4px;font-size:15px">동아리 추천 챗봇</h4><p style="font-size:13px;color:var(--sub)">레이블: 운동 / 음악 / 봉사 / 학술. 관심사를 말하면 어울리는 동아리를 안내.</p></div>
+      <div class="card" style="margin:0;border-left:4px solid var(--knu)"><span class="badge b-blue">이미지</span><h4 style="font-weight:800;margin:8px 0 4px;font-size:15px">분리수거 도우미</h4><p style="font-size:13px;color:var(--sub)">레이블: 플라스틱 / 캔 / 종이 / 유리. 웹캠에 물건을 비추면 버릴 곳을 알려줌.</p></div>
+      <div class="card" style="margin:0;border-left:4px solid var(--knu)"><span class="badge b-blue">이미지</span><h4 style="font-weight:800;margin:8px 0 4px;font-size:15px">가위바위보 심판</h4><p style="font-size:13px;color:var(--sub)">5차시에서 만든 것을 발전 — 3판 2선승, 점수판, 승률 통계 추가.</p></div>
+      <div class="card" style="margin:0;border-left:4px solid var(--knu)"><span class="badge b-blue">이미지</span><h4 style="font-weight:800;margin:8px 0 4px;font-size:15px">마스크·모자 착용 확인</h4><p style="font-size:13px;color:var(--sub)">레이블: 착용 / 미착용. 실험실·조리실 출입 안내 화면 시뮬레이션.</p></div>
+      <div class="card" style="margin:0;border-left:4px solid var(--knu)"><span class="badge b-blue">이미지</span><h4 style="font-weight:800;margin:8px 0 4px;font-size:15px">우리 학교 건물 안내</h4><p style="font-size:13px;color:var(--sub)">레이블: 창조관 / 한마관 / 도서관. 사진을 찍으면 건물 이름과 안내를 표시.</p></div>
+      <div class="card" style="margin:0;border-left:4px solid var(--teal)"><span class="badge b-teal">응용</span><h4 style="font-weight:800;margin:8px 0 4px;font-size:15px">퀴즈 정답 판별기</h4><p style="font-size:13px;color:var(--sub)">서술형 답을 정답/오답으로 분류. "표현이 달라도 맞으면 정답"을 배우게 함.</p></div>
+      <div class="card" style="margin:0;border-left:4px solid var(--teal)"><span class="badge b-teal">응용</span><h4 style="font-weight:800;margin:8px 0 4px;font-size:15px">수어 인사말 인식</h4><p style="font-size:13px;color:var(--sub)">레이블: 안녕 / 고마워 / 미안해. 접근성 주제와 연결되는 의미 있는 프로젝트.</p></div>
+      <div class="card" style="margin:0;border-left:4px solid var(--teal)"><span class="badge b-teal">응용</span><h4 style="font-weight:800;margin:8px 0 4px;font-size:15px">식단 사진 기록기</h4><p style="font-size:13px;color:var(--sub)">레이블: 한식 / 분식 / 양식 / 후식. 사진 한 장으로 오늘 식단 자동 기록.</p></div>
+      <div class="card" style="margin:0;border-left:4px solid var(--teal)"><span class="badge b-teal">응용</span><h4 style="font-weight:800;margin:8px 0 4px;font-size:15px">자리 비움 감지 알림</h4><p style="font-size:13px;color:var(--sub)">레이블: 사람 있음 / 없음. 도서관 좌석 점유 안내 시뮬레이션.</p></div>
+    </div>
+  </div>
+
+  <h2 class="sec serif">3. 📝 프로젝트 기획 워크시트 (직접 작성)</h2>
+  <p class="sec-desc">아래 칸을 채우면 <b>기획서 + AI에게 물어볼 프롬프트</b>가 자동으로 만들어집니다. 이 프롬프트를 ChatGPT나 Claude에 넣으면 데이터 예시까지 받을 수 있습니다.</p>
+  <div class="card">
+    <div class="ws">
+      <label for="wsName">① 프로젝트 이름</label>
+      <input id="wsName" placeholder="예: 우리 학과 문의 자동 분류기">
+      <p class="hint">누가 봐도 무엇을 하는지 알 수 있는 이름으로</p>
+
+      <label for="wsProb">② 어떤 불편을 해결하나요?</label>
+      <textarea id="wsProb" placeholder="예: 학과 사무실에 하루 30건씩 문의가 오는데, 담당자를 찾느라 학생도 직원도 시간을 낭비한다"></textarea>
+
+      <label for="wsType">③ 데이터 종류</label>
+      <select id="wsType">
+        <option value="텍스트">텍스트 (문장·단어를 분류)</option>
+        <option value="이미지">이미지 (사진·웹캠을 분류)</option>
+        <option value="숫자">숫자 (수치 데이터로 예측)</option>
+        <option value="소리">소리 (마이크 입력을 분류)</option>
+      </select>
+
+      <label for="wsLabels">④ 레이블 (쉼표로 구분, 2~4개 권장)</label>
+      <input id="wsLabels" placeholder="예: 수강신청, 장학금, 졸업요건, 시설">
+      <p class="hint">서로 겹치지 않아야 합니다. "기타"를 넣으면 애매한 입력을 처리하기 좋습니다.</p>
+
+      <label for="wsCount">⑤ 레이블당 모을 데이터 개수</label>
+      <input id="wsCount" type="number" value="15" min="5" max="100">
+      <p class="hint">최소 10개, 권장 15~20개. 레이블 간 개수를 비슷하게!</p>
+
+      <label for="wsAction">⑥ 판별 후 프로그램이 할 일</label>
+      <textarea id="wsAction" placeholder="예: 담당 부서와 연락처를 말풍선으로 보여주고, 관련 안내 페이지 주소를 알려준다"></textarea>
+
+      <label for="wsTool">⑦ 만들 도구</label>
+      <select id="wsTool">
+        <option value="스크래치">🧩 스크래치 (ML4K 연동)</option>
+        <option value="파이썬">🐍 파이썬 (Colab)</option>
+        <option value="둘 다">🧩+🐍 둘 다 만들어 비교</option>
+      </select>
+    </div>
+    <div style="text-align:center;margin-top:20px"><button class="btn" onclick="wsGen()">📋 기획서 + 프롬프트 생성하기</button></div>
+    <div id="wsOut" style="margin-top:16px"></div>
+  </div>
+
+  <h2 class="sec serif">4. 🏷 레이블 설계 — 가장 많이 실패하는 지점</h2>
+  <div class="card">
+    <table class="simple">
+      <tr><th style="width:170px">원칙</th><th>나쁜 예</th><th>좋은 예</th></tr>
+      <tr><td><b>겹치면 안 된다</b></td><td>"질문 / 문의 / 궁금한 것" — 사람도 구분 못 함</td><td>"수강신청 / 장학금 / 졸업요건"</td></tr>
+      <tr><td><b>빠짐이 없어야 한다</b></td><td>"칭찬 / 불평"만 있으면 "오늘 날씨 좋네요"가 갈 곳이 없음</td><td>"칭찬 / 불평 / <b>기타</b>"</td></tr>
+      <tr><td><b>주관적이면 안 된다</b></td><td>"좋은 글 / 나쁜 글" — 사람마다 기준이 다름</td><td>"욕설 포함 / 미포함"</td></tr>
+      <tr><td><b>개수가 균형적이어야</b></td><td>A 40개 : B 5개 → 거의 다 A로 판정</td><td>A 15개 : B 15개</td></tr>
+    </table>
+    <div class="tip"><b>🎯 "기타" 레이블의 위력</b> — 3차시에서 "오늘 점심 뭐 먹지"를 넣었을 때 AI가 억지로 칭찬/불평 중 하나를 골랐던 것을 기억하세요. <b>"기타" 레이블에 관계없는 문장 10개</b>를 넣어두면, 모델이 <b>"이건 내 담당이 아니다"</b>라고 답할 수 있게 됩니다. 실무 챗봇에서 반드시 하는 설계입니다.</div>
+  </div>
+
+  <h2 class="sec serif">5. 🧩 스크래치 트랙 — 데이터 수집 &amp; 훈련</h2>
+  <div class="track scr">
+    <div class="track-head"><span class="ico">🧩</span> ML4K에서 내 프로젝트 만들고 훈련까지 <small>25분</small></div>
+    <div class="track-body">
+      <div class="steps">
+        <div class="step"><div><h5>프로젝트 생성</h5><p>ML4K → [+ 프로젝트 추가] → 워크시트 ①의 이름 / ③의 인식 방법 → [만들기].</p></div></div>
+        <div class="step"><div><h5>레이블 만들기</h5><p>[훈련] → 워크시트 ④의 레이블을 하나씩 추가. <b>"기타" 레이블도 잊지 마세요.</b></p></div></div>
+        <div class="step"><div><h5>데이터 수집 (20분 — 가장 오래 걸립니다)</h5><p>레이블당 워크시트 ⑤의 개수만큼. <b>혼자 다 쓰지 말고 옆 사람에게 문장을 부탁하세요.</b> 표현이 다양해질수록 모델이 강해집니다.</p></div></div>
+        <div class="step"><div><h5>훈련 &amp; 평가</h5><p>[학습 &amp; 평가] → 훈련 → 완료 후 <b>훈련에 안 쓴 데이터</b>로 5개 이상 테스트. 결과를 아래 표에 기록하세요.</p></div></div>
+        <div class="step"><div><h5>보완 후 재훈련</h5><p>틀린 유형의 데이터를 3~5개 추가하고 <b>다시 훈련</b>. 정확도가 오르는 것을 확인합니다. 이 반복이 실제 AI 개발의 일상입니다.</p></div></div>
+      </div>
+      <table class="simple">
+        <tr><th style="width:44%">테스트 문장/사진</th><th style="width:14%">내 정답</th><th style="width:14%">AI 답</th><th style="width:12%">확신도</th><th>O/X</th></tr>
+        <tr><td style="height:36px"></td><td></td><td></td><td></td><td></td></tr>
+        <tr><td style="height:36px"></td><td></td><td></td><td></td><td></td></tr>
+        <tr><td style="height:36px"></td><td></td><td></td><td></td><td></td></tr>
+        <tr><td style="height:36px"></td><td></td><td></td><td></td><td></td></tr>
+        <tr><td style="height:36px"></td><td></td><td></td><td></td><td></td></tr>
+      </table>
+      <p style="font-size:13px;color:var(--sub);margin-top:8px">※ 이 표를 종이에 옮겨 적고 채우세요. 8차시 발표에서 <b>"처음 정확도 → 개선 후 정확도"</b>를 말하면 발표의 완성도가 크게 올라갑니다.</p>
+    </div>
+  </div>
+
+  <h2 class="sec serif">6. 🐍 파이썬 트랙 — 내 데이터로 모델 만들기 (템플릿)</h2>
+  <div class="track py">
+    <div class="track-head"><span class="ico">🐍</span> 빈칸만 채우면 되는 프로젝트 템플릿 <small>25분</small></div>
+    <div class="track-body">
+      <div class="cbox"><div class="cbox-head"><span>🐍 템플릿 · 텍스트 분류 프로젝트 (여기만 고치면 됩니다)</span><button class="copy-btn" onclick="copyCode(this)">📋 복사</button></div>
+<pre>from sklearn.feature_extraction.text import CountVectorizer
+from sklearn.naive_bayes import MultinomialNB
+from sklearn.pipeline import make_pipeline
+from sklearn.model_selection import train_test_split
+
+# ══════ 여기만 고치세요 ══════
+DATA = {
+    "레이블1": ["예시 문장 1", "예시 문장 2", "예시 문장 3",
+              "예시 문장 4", "예시 문장 5"],
+    "레이블2": ["예시 문장 1", "예시 문장 2", "예시 문장 3",
+              "예시 문장 4", "예시 문장 5"],
+    "기타":    ["관계없는 문장 1", "관계없는 문장 2", "관계없는 문장 3",
+              "관계없는 문장 4", "관계없는 문장 5"],
+}
+# ═══════════════════════════
+
+X = [t for label, texts in DATA.items() for t in texts]
+y = [label for label, texts in DATA.items() for _ in texts]
+print(f"총 {len(X)}개 데이터, {len(DATA)}개 레이블")
+
+model = make_pipeline(
+    CountVectorizer(analyzer='char_wb', ngram_range=(2,3)),
+    MultinomialNB())
+model.fit(X, y)
+print("✅ 학습 완료!")
+
+# 테스트 — 훈련에 없던 문장을 넣어보세요
+tests = ["여기에 테스트 문장을 쓰세요", "또 다른 테스트 문장"]
+for t in tests:
+    label = model.predict([t])[0]
+    conf = max(model.predict_proba([t])[0]) * 100
+    mark = "✅" if conf >= 50 else "🤔"
+    print(f"{mark} '{t}' → {label} ({conf:.0f}%)")</pre>
+<div class="out"><b>사용법</b>1. DATA 부분의 레이블 이름과 문장을 내 프로젝트로 교체
+2. 레이블당 문장을 <b>10개 이상</b>으로 늘리기
+3. tests에 훈련에 안 쓴 문장을 넣어 확인
+→ ML4K에서 하는 일과 정확히 같습니다.</div></div>
+      <div class="cbox"><div class="cbox-head"><span>🐍 템플릿 · 성능 점검 — 진짜 실력 측정하기</span><button class="copy-btn" onclick="copyCode(this)">📋 복사</button></div>
+<pre># 위 코드에 이어서 실행 — 2차시에서 배운 훈련/시험 분리
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y, test_size=0.3, random_state=42, stratify=y)
+
+check = make_pipeline(
+    CountVectorizer(analyzer='char_wb', ngram_range=(2,3)),
+    MultinomialNB())
+check.fit(X_train, y_train)
+
+print("훈련 정확도 :", round(check.score(X_train, y_train)*100, 1), "%")
+print("시험 정확도 :", round(check.score(X_test,  y_test )*100, 1), "%  ← 이게 진짜 실력")
+
+# 무엇을 틀렸는지 확인 (개선 방향이 여기서 나옵니다)
+pred = check.predict(X_test)
+print("\n[틀린 사례]")
+for t, real, ai in zip(X_test, y_test, pred):
+    if real != ai:
+        print(f"  '{t}'  정답 {real} → AI {ai}")</pre>
+<div class="out"><b>해석 요령</b>· 두 정확도가 비슷 → 건강한 모델 👍
+· 훈련은 높은데 시험이 낮음 → <b>과적합</b>, 데이터를 더 모으세요
+· 둘 다 낮음 → 레이블이 겹치거나 데이터가 부족합니다</div></div>
+    </div>
+  </div>
+
+  <h2 class="sec serif">✅ 7차시 체크리스트</h2>
+  <p class="sec-desc">8차시로 넘어가기 전에 아래 항목이 모두 완료되어야 합니다.</p>
+  <div class="card">
+    <div class="progress"><div class="progress-bar" id="chk7bar"></div></div>
+    <div class="progress-label" id="chk7lab" style="margin-bottom:12px"></div>
+    <div class="chk-wrap" id="chk7"></div>
+  </div>
+</section>
+<!-- ════════════ 8차시 ════════════ -->
+<section id="t8" class="panel">
+  <div class="les-head">
+    <span class="no">LESSON 08 · 17:00 – 18:00</span>
+    <h2>AI 프로젝트 구현 ② — 완성 · 윤리 · 발표</h2>
+    <p>훈련한 모델을 <b>돌아가는 프로그램</b>으로 완성하고, 3분 시연으로 마무리합니다. 그 전에 AI를 만드는 사람이 반드시 짚어야 할 <b>윤리와 한계</b>를 함께 정리합니다.</p>
+    <div class="hm"><span>🔧 프로그램 완성</span><span>⚖️ AI 윤리</span><span>🎤 시연 발표</span><span>🎓 수료</span></div>
+  </div>
+
+  <h2 class="sec serif">학습 목표</h2>
+  <div class="goals">
+    <div class="goal"><b>GOAL 1</b><p>학습한 모델을 사용자가 쓸 수 있는 완성된 프로그램으로 만들 수 있다.</p></div>
+    <div class="goal"><b>GOAL 2</b><p>AI의 편향·책임·개인정보 문제를 자기 프로젝트에 비추어 설명할 수 있다.</p></div>
+    <div class="goal"><b>GOAL 3</b><p>만든 것을 3분 안에 시연하고, 한계와 다음 단계를 말할 수 있다.</p></div>
+  </div>
+
+  <h2 class="sec serif">1. 🧩 스크래치 트랙 — 프로그램 완성하기 (20분)</h2>
+  <div class="track scr">
+    <div class="track-head"><span class="ico">🧩</span> "돌아가는 것"에서 "쓸 만한 것"으로 <small>20분</small></div>
+    <div class="track-body">
+      <p style="font-size:14.5px;color:var(--sub);margin-bottom:6px">7차시에서 만든 모델을 스크래치로 불러와 아래 <b>완성형 구조</b>로 조립합니다. 핵심은 <b>확신도 확인 → 결과 안내 → 반복</b> 세 가지입니다.</p>
+      <div class="blocks">
+        <div class="blk-cap">▼ 완성형 프로그램 구조 (모든 프로젝트에 공통 적용)</div>
+        <div class="blk-row"><span class="blk ev">🏳 클릭했을 때</span></div>
+        <div class="blk-in">
+          <div class="blk-row"><span class="blk lk">말하기 <span class="slot">안녕하세요! 저는 [프로젝트 이름]입니다</span> 2 초</span></div>
+          <div class="blk-row"><span class="blk va">변수 [맞힌횟수] 를 <span class="slot">0</span> 로 정하기</span></div>
+          <div class="blk-row"><span class="blk ct">무한 반복하기</span></div>
+          <div class="blk-in">
+            <div class="blk-row"><span class="blk sen">묻고 기다리기 <span class="slot">무엇을 도와드릴까요?</span></span></div>
+            <div class="blk-row"><span class="blk va">변수 [판단] 을 <span class="blk ml" style="margin:0 4px">텍스트 (대답) 인식하기 (레이블)</span> 로 정하기</span></div>
+            <div class="blk-row"><span class="blk va">변수 [확신도] 를 <span class="blk ml" style="margin:0 4px">텍스트 (대답) 인식하기 (정확도)</span> 로 정하기</span></div>
+            <div class="blk-cap" style="margin:8px 0 2px">① 안전장치 — 확신도가 낮으면 답하지 않기</div>
+            <div class="blk-row"><span class="blk ct">만약 &lt;(확신도) &lt; <span class="slot">60</span>&gt; (이)라면</span></div>
+            <div class="blk-in"><div class="blk-row"><span class="blk lk">말하기 <span class="slot">🤔 잘 모르겠어요. 다르게 말씀해 주시겠어요?</span> 2 초</span></div></div>
+            <div class="blk-row" style="margin-left:0">아니면</div>
+            <div class="blk-in">
+              <div class="blk-cap" style="margin:2px 0">② 레이블별 안내</div>
+              <div class="blk-row"><span class="blk ct">만약 &lt;(판단) = <span class="slot">레이블1</span>&gt; (이)라면</span></div>
+              <div class="blk-in">
+                <div class="blk-row"><span class="blk lk">모양을 <span class="slot">모양1</span>(으)로 바꾸기</span></div>
+                <div class="blk-row"><span class="blk lk">말하기 <span class="slot">여기로 문의하세요: ...</span> 3 초</span></div>
+                <div class="blk-row"><span class="blk sen">소리 <span class="slot">Pop</span> 재생하기</span></div>
+              </div>
+              <div class="blk-row" style="margin-left:0">아니면 ... (레이블 수만큼 반복)</div>
+              <div class="blk-row"><span class="blk va">변수 [맞힌횟수] 를 <span class="slot">1</span> 만큼 바꾸기</span></div>
+            </div>
+            <div class="blk-cap" style="margin:8px 0 2px">③ 종료 조건</div>
+            <div class="blk-row"><span class="blk ct">만약 &lt;(대답) = <span class="slot">그만</span>&gt; (이)라면</span></div>
+            <div class="blk-in"><div class="blk-row"><span class="blk lk">말하기 <span class="blk op" style="margin:0 4px">(<span class="slot">오늘 도와드린 횟수:</span>) 와 (맞힌횟수) 결합</span> 3 초</span> <span class="blk ct">멈추기 [모두]</span></div></div>
+          </div>
+        </div>
+      </div>
+      <div class="tip"><b>✨ 완성도를 올리는 마무리 5가지</b> — ① 시작할 때 <b>사용법 안내 말풍선</b> ② 배경과 스프라이트를 프로젝트에 맞게 교체 ③ 판정 결과에 따라 <b>모양·소리 변화</b> ④ 확신도를 <b>화면에 표시</b>(변수 체크박스 켜기) ⑤ [프로젝트 → 컴퓨터에 저장하기]로 <b>.sb3 파일 백업</b> — 발표 전에 꼭!</div>
+    </div>
+  </div>
+
+  <h2 class="sec serif">2. 🐍 파이썬 트랙 — 대화형 프로그램으로 완성 (20분)</h2>
+  <div class="track py">
+    <div class="track-head"><span class="ico">🐍</span> 확신도 안전장치가 들어간 완성형 코드 <small>20분</small></div>
+    <div class="track-body">
+      <div class="cbox"><div class="cbox-head"><span>🐍 완성형 · 확신도 안전장치가 있는 대화 프로그램</span><button class="copy-btn" onclick="copyCode(this)">📋 복사</button></div>
+<pre>from sklearn.feature_extraction.text import CountVectorizer
+from sklearn.naive_bayes import MultinomialNB
+from sklearn.pipeline import make_pipeline
+
+# ① 학습 데이터 (7차시에서 만든 것을 넣으세요)
+DATA = {
+ "인사":      ["안녕", "안녕하세요", "반가워", "하이", "좋은 아침", "반갑습니다"],
+ "질문_시간": ["지금 몇 시야", "시간 알려줘", "몇 시인지 알려줘", "현재 시각", "시간 좀"],
+ "질문_날씨": ["오늘 날씨 어때", "비 와", "날씨 알려줘", "우산 챙겨야 해", "기온 몇 도야"],
+ "작별":      ["잘 가", "안녕히 계세요", "다음에 봐", "이만 갈게", "바이바이"],
+}
+# ② 각 레이블에 대한 응답
+REPLY = {
+ "인사":      "안녕하세요! 무엇을 도와드릴까요?",
+ "질문_시간": "지금은 오후 2시 30분입니다.",
+ "질문_날씨": "오늘은 맑고 최고 24도입니다.",
+ "작별":      "다음에 또 만나요!",
+}
+
+X = [t for k, v in DATA.items() for t in v]
+y = [k for k, v in DATA.items() for _ in v]
+bot = make_pipeline(
+    CountVectorizer(analyzer='char_wb', ngram_range=(2,3)),
+    MultinomialNB()).fit(X, y)
+
+# ③ 확신도 안전장치 — 스크래치의 [정확도 &lt; 60] 블록과 같은 역할
+THRESHOLD = 0.5
+
+def answer(q):
+    label = bot.predict([q])[0]
+    conf  = bot.predict_proba([q]).max()
+    if conf &lt; THRESHOLD:
+        return f"🤔 아직 배우지 못한 질문이에요. (추측: {label}, {conf*100:.0f}%)"
+    return f"{REPLY[label]}   [{label} · 확신도 {conf*100:.0f}%]"
+
+for q in ["안녕!", "지금 시간이 어떻게 되나요", "내일 비 오나요",
+          "잘 있어", "저녁 메뉴 추천해줘"]:
+    print(f"👤 {q}")
+    print(f"🤖 {answer(q)}\n")</pre>
+<div class="out"><b>실행 결과 — 마지막 질문에서 "모른다"고 답하는 것이 핵심입니다</b>👤 안녕!
+🤖 안녕하세요! 무엇을 도와드릴까요?   [인사 · 확신도 77%]
+
+👤 지금 시간이 어떻게 되나요
+🤖 지금은 오후 2시 30분입니다.   [질문_시간 · 확신도 99%]
+
+👤 내일 비 오나요
+🤖 오늘은 맑고 최고 24도입니다.   [질문_날씨 · 확신도 70%]
+
+👤 잘 있어
+🤖 다음에 또 만나요!   [작별 · 확신도 73%]
+
+👤 저녁 메뉴 추천해줘
+🤖 🤔 아직 배우지 못한 질문이에요. (추측: 질문_시간, 41%)  ← ✅ 올바른 동작!</div></div>
+      <div class="tip"><b>🔑 오늘 배운 것이 여기 다 들어 있습니다</b> — 데이터 준비(2차시) · 학습 <code>fit</code>(2차시) · 예측 <code>predict</code>(3차시) · 확신도 <code>predict_proba</code>(3차시) · <b>모르면 모른다고 답하기</b>(6차시 환각 대응). <b>마지막 질문에 "모른다"고 답하는 AI가, 아무 말이나 지어내는 AI보다 훨씬 좋은 AI입니다.</b></div>
+      <div class="cbox"><div class="cbox-head"><span>🐍 심화 · 직접 대화해보기 (Colab에서 입력 받기)</span><button class="copy-btn" onclick="copyCode(this)">📋 복사</button></div>
+<pre># 위 코드에 이어서 — '그만'을 입력할 때까지 대화합니다
+print("🤖 챗봇을 시작합니다. ('그만' 입력 시 종료)\n")
+count = 0
+while True:
+    q = input("👤 나 : ")
+    if q.strip() in ("그만", "종료", "exit"):
+        print(f"🤖 대화 {count}번 나눴어요. 안녕히 가세요!")
+        break
+    print("🤖 봇 :", answer(q), "\n")
+    count += 1</pre>
+<div class="out"><b>참고</b>Colab에서 실행하면 입력창이 나타납니다.
+스크래치의 <b>[묻고 기다리기 + 무한 반복하기]</b>와 정확히 같은 구조입니다.</div></div>
+    </div>
+  </div>
+
+  <h2 class="sec serif">3. ⚖️ AI를 만드는 사람이 반드시 짚어야 할 것</h2>
+  <div class="card">
+    <table class="simple">
+      <tr><th style="width:130px">쟁점</th><th>무엇이 문제인가</th><th style="width:250px">내 프로젝트에서 확인할 것</th></tr>
+      <tr><td><b>편향</b><br><span style="font-size:12px;color:var(--sub)">Bias</span></td><td>데이터가 한쪽으로 치우치면 AI도 치우칩니다. 특정 성별·연령·지역의 데이터만 학습하면 다른 집단에서 성능이 떨어집니다. <b>AI는 데이터에 있는 차별을 그대로 학습합니다.</b></td><td>내 데이터를 <b>몇 명이</b> 만들었나? 한 사람 말투만 들어 있지 않나?</td></tr>
+      <tr><td><b>책임</b><br><span style="font-size:12px;color:var(--sub)">Accountability</span></td><td>AI가 틀렸을 때 누가 책임지나요? 개발자? 사용자? <b>"AI가 그랬다"는 면책 사유가 되지 않습니다.</b></td><td>내 프로그램이 틀리면 어떤 피해가 생기나? 사람이 최종 확인하는 절차가 있나?</td></tr>
+      <tr><td><b>개인정보</b><br><span style="font-size:12px;color:var(--sub)">Privacy</span></td><td>얼굴·목소리·글은 모두 개인정보입니다. <b>동의 없이 수집·학습하면 법적 문제</b>가 됩니다.</td><td>다른 사람 사진을 <b>동의받고</b> 찍었나? 수업 후 데이터를 삭제할 것인가?</td></tr>
+      <tr><td><b>투명성</b><br><span style="font-size:12px;color:var(--sub)">Transparency</span></td><td>왜 그렇게 판단했는지 설명할 수 없는 AI를 <b>"블랙박스"</b>라 합니다. 의료·채용·대출처럼 중요한 결정에서는 설명 가능성이 필수입니다.</td><td>사용자에게 <b>확신도를 보여주고</b> 있나? "AI의 판단"임을 명시했나?</td></tr>
+      <tr><td><b>저작권</b><br><span style="font-size:12px;color:var(--sub)">Copyright</span></td><td>생성형 AI의 학습 데이터와 결과물의 권리는 <b>여전히 논쟁 중</b>입니다. 나라마다 판단이 다릅니다.</td><td>남의 사진·글을 학습에 썼나? 결과물을 공개할 수 있나?</td></tr>
+    </table>
+    <div class="ana"><h5>🚌 비유 — 자동차와 운전면허</h5>
+      <p>자동차가 나왔을 때 사람들은 <b>속도</b>에만 열광했습니다. 그러나 지금 우리에게 필요한 것은 속도만이 아니라 <b>신호등, 안전벨트, 면허 제도</b>입니다.<br><br>
+      AI도 같은 지점에 있습니다. "무엇을 할 수 있나"만큼 <b>"어디까지 해도 되나"</b>가 중요해졌습니다. 오늘 여러분이 만든 것은 작지만, <b>AI를 만드는 사람의 자리</b>에 처음 서본 것입니다. 그 자리에는 능력과 함께 책임이 따릅니다.</p>
+    </div>
+    <div class="note"><b>🗣 5분 토론 주제 (조별)</b> — "가위바위보 심판 AI가 특정 사람의 손만 잘 못 알아본다면, 그것은 <b>기술 문제인가 윤리 문제인가?</b>" · "내가 만든 분류기가 <b>학생의 성적이나 진로에 영향</b>을 준다면, 정확도가 몇 %여야 써도 될까?"</div>
+  </div>
+
+  <h2 class="sec serif">4. 🎤 시연 발표 (조별 3분)</h2>
+  <div class="card">
+    <div class="steps">
+      <div class="step"><div><h5>문제 (30초)</h5><p>"저희는 <b>[어떤 불편]</b>을 해결하려 했습니다." — 기술이 아니라 <b>문제</b>부터 말하는 것이 좋은 발표의 시작입니다.</p></div></div>
+      <div class="step"><div><h5>설계 (30초)</h5><p>"<b>[데이터 종류]</b>로 <b>[레이블들]</b>을 만들고, 레이블당 <b>[개수]</b>개를 모았습니다."</p></div></div>
+      <div class="step"><div><h5>시연 (60초)</h5><p><b>성공 사례 2개 + 실패 사례 1개</b>를 보여주세요. 실패를 보여주는 팀이 더 신뢰를 얻습니다.</p></div></div>
+      <div class="step"><div><h5>발견 (40초)</h5><p>"<b>[무엇]</b>일 때 자주 틀렸고, <b>[어떻게]</b> 고쳤더니 나아졌습니다." — 7차시 기록표를 활용하세요.</p></div></div>
+      <div class="step"><div><h5>다음 단계 (20초)</h5><p>"시간이 더 있다면 <b>[무엇]</b>을 하고 싶습니다."</p></div></div>
+    </div>
+    <div class="pbox"><div class="pbox-head"><span>🎤 발표 대본 만들기 프롬프트 — AI에게 도움받기</span><button class="copy-btn" onclick="copyPrompt(this)">📋 복사</button></div>
+<pre>너는 발표 코치야. 아래 정보로 3분짜리 시연 발표 대본을 써줘.
+
+[프로젝트 이름] 
+[해결하려는 문제] 
+[사용한 데이터] 종류: , 레이블: , 레이블당 개수: 
+[성능] 잘 맞힌 경우: , 자주 틀린 경우: 
+[개선한 것] 
+[아쉬운 점 / 다음에 하고 싶은 것] 
+
+조건:
+- 전체 3분(약 450자), 문제 → 설계 → 시연 → 발견 → 다음 단계 순서
+- 전문 용어는 쓰되 바로 쉬운 말로 풀어서 설명
+- 실패 사례를 솔직하게 말하는 부분을 반드시 넣어줘
+- 마지막은 청중에게 던지는 질문 한 문장으로 마무리
+- 발표자가 읽을 대본 형태로, 문장을 짧게 끊어서</pre></div>
+  </div>
+
+  <h2 class="sec serif">5. 🏆 오늘 배운 것 — 최종 도장깨기</h2>
+  <p class="sec-desc">8시간 동안 다룬 핵심 항목입니다. 스스로 체크해 보세요. <b>12개 중 10개 이상이면 오늘의 목표를 달성한 것</b>입니다.</p>
+  <div class="card">
+    <div class="progress"><div class="progress-bar" id="chk8bar"></div></div>
+    <div class="progress-label" id="chk8lab" style="margin-bottom:12px"></div>
+    <div class="chk-wrap" id="chk8"></div>
+  </div>
+
+  <h2 class="sec serif">6. 🎓 최종 확인 문제 (8문항)</h2>
+  <div class="card"><div class="quiz" data-quiz="qf"></div></div>
+
+  <h2 class="sec serif">7. 🚀 여기서 더 나아가려면</h2>
+  <div class="card">
+    <table class="simple">
+      <tr><th style="width:150px">방향</th><th>추천 다음 단계</th><th style="width:190px">자료</th></tr>
+      <tr><td><b>스크래치 심화</b></td><td>ML4K의 <b>숫자·소리 프로젝트</b>에 도전. 음성 명령으로 움직이는 게임, 데이터로 예측하는 프로그램까지 확장됩니다.</td><td>ML4K 워크시트 (한국어 제공)</td></tr>
+      <tr><td><b>파이썬 심화</b></td><td>오늘 쓴 <code>fit / predict</code>는 그대로 두고 모델만 바꿔보세요. <b>RandomForest, SVM, 로지스틱 회귀</b> — 한 줄만 바뀝니다.</td><td>scikit-learn 공식 튜토리얼</td></tr>
+      <tr><td><b>딥러닝 입문</b></td><td>Teachable Machine으로 만든 모델을 <b>TensorFlow.js로 내보내</b> 웹페이지에 붙이기. 코드 없이 딥러닝 배포를 경험합니다.</td><td>Teachable Machine → Export</td></tr>
+      <tr><td><b>생성형 AI 활용</b></td><td>프롬프트 4원칙을 <b>업무·과제에 매일 적용</b>. 잘 나온 프롬프트를 문서로 모아두면 그것이 곧 자산이 됩니다.</td><td>6차시 프롬프트 템플릿</td></tr>
+      <tr><td><b>체계적 학습</b></td><td>구글 <b>머신러닝 단기집중과정</b>(한국어 무료)이 오늘 배운 내용의 정확한 다음 단계입니다.</td><td>developers.google.com</td></tr>
+    </table>
+    <div class="links" style="margin-top:16px">
+      <a href="https://machinelearningforkids.co.uk/?lang=ko" target="_blank" rel="noopener">🤖 머신러닝 for Kids</a>
+      <a href="https://teachablemachine.withgoogle.com/" target="_blank" rel="noopener">🖐 Teachable Machine</a>
+      <a href="https://developers.google.com/machine-learning/crash-course?hl=ko" target="_blank" rel="noopener">🎓 ML 단기집중과정 (한국어)</a>
+      <a href="https://scikit-learn.org/stable/tutorial/index.html" target="_blank" rel="noopener">📘 scikit-learn 튜토리얼</a>
+      <a href="https://colab.research.google.com/" target="_blank" rel="noopener">🐍 Google Colab</a>
+      <a href="https://poloclub.github.io/cnn-explainer/" target="_blank" rel="noopener">🔬 CNN Explainer</a>
+    </div>
+  </div>
+
+  <h2 class="sec serif">🎓 수료를 축하합니다</h2>
+  <div class="card" style="background:linear-gradient(135deg,#0F2A52,#1B4FA0);border:none;color:#fff;text-align:center;padding:34px 24px">
+    <div style="font-size:44px;margin-bottom:10px">🎓</div>
+    <h3 class="serif" style="font-size:24px;font-weight:900;margin-bottom:10px">8시간 전과 지금, 무엇이 달라졌나요?</h3>
+    <p style="font-size:15px;color:#D7E4F8;line-height:1.9;max-width:660px;margin:0 auto">오늘 아침, AI는 <b style="color:#F2A93B">신기하지만 알 수 없는 것</b>이었습니다.<br>
+    지금 여러분은 <b style="color:#F2A93B">데이터를 모아 모델을 훈련시키고</b>, <b style="color:#F2A93B">틀린 이유를 분석하고</b>,<br>
+    <b style="color:#F2A93B">AI가 "모른다"고 말하게 만드는</b> 사람이 되었습니다.<br><br>
+    AI를 잘 쓰는 사람은 AI를 <b>많이 아는</b> 사람이 아니라,<br>
+    <b style="color:#F2A93B">AI가 언제 틀리는지 아는</b> 사람입니다. 오늘 그것을 배우셨습니다.</p>
+  </div>
+</section>
+</main>
+
+<footer>
+  <b>AI 첫걸음 8시간 — 스크래치 &amp; 파이썬으로 배우는 인공지능</b><br>
+  경남대학교 창조관 1층 컴퓨터실습실 · 2026. 9. 19.(토) 09:00 – 18:00<br>
+  <span style="font-size:12.5px;opacity:.8">모든 실습 도구는 무료이며 설치가 필요 없습니다 · 강의 후에도 이 페이지를 그대로 사용하실 수 있습니다</span>
+</footer>
+
+<div class="toast" id="toast"></div>
+
+<script>
+/* ── 탭 전환 ── */
+document.querySelectorAll('.tab-btn').forEach(b=>{
+  b.addEventListener('click',()=>{
+    document.querySelectorAll('.tab-btn').forEach(x=>x.classList.remove('active'));
+    document.querySelectorAll('.panel').forEach(x=>x.classList.remove('active'));
+    b.classList.add('active');
+    document.getElementById(b.dataset.tab).classList.add('active');
+    window.scrollTo({top:0,behavior:'smooth'});
+  });
+});
+
+/* ── 복사 (프롬프트 / 코드 공용) ── */
+function copyFrom(btn, sel){
+  const pre = btn.closest(sel).querySelector('pre');
+  const text = pre.innerText;
+  const done = ()=>{
+    btn.classList.add('done'); const o=btn.innerHTML; btn.innerHTML='✓ 복사됨';
+    showToast('복사되었습니다 ✓');
+    setTimeout(()=>{btn.classList.remove('done');btn.innerHTML=o;},1800);
+  };
+  if(navigator.clipboard && navigator.clipboard.writeText){
+    navigator.clipboard.writeText(text).then(done).catch(()=>fallbackCopy(text,done));
+  } else fallbackCopy(text,done);
+}
+function copyPrompt(btn){ copyFrom(btn,'.pbox'); }
+function copyCode(btn){ copyFrom(btn,'.cbox'); }
+function fallbackCopy(text,cb){
+  const ta=document.createElement('textarea');
+  ta.value=text; ta.style.position='fixed'; ta.style.opacity='0';
+  document.body.appendChild(ta); ta.focus(); ta.select();
+  try{ document.execCommand('copy'); cb(); }catch(e){ showToast('복사 실패 — 드래그해서 복사해주세요'); }
+  document.body.removeChild(ta);
+}
+let toastT;
+function showToast(msg){
+  const t=document.getElementById('toast'); t.textContent=msg; t.classList.add('show');
+  clearTimeout(toastT); toastT=setTimeout(()=>t.classList.remove('show'),2000);
+}
+
+/* ══════════ 2차시 · 회귀 시뮬레이터 ══════════ */
+const REG_DATA=[[1,32],[2,45],[3,51],[4,63],[5,70],[6,78],[7,85],[8,92]];
+const regSvg=document.getElementById('regSvg');
+function rx(h){ return 45 + (h/9)*390; }
+function ry(s){ return 218 - (s/110)*196; }
+function regDraw(){
+  const a=parseFloat(document.getElementById('regA').value);
+  const b=parseFloat(document.getElementById('regB').value);
+  document.getElementById('regAv').textContent=a.toFixed(1);
+  document.getElementById('regBv').textContent=b.toFixed(0);
+  let s='';
+  s+=`<line x1="45" y1="218" x2="440" y2="218" stroke="#C3D2E6" stroke-width="1.5"/>`;
+  s+=`<line x1="45" y1="18" x2="45" y2="218" stroke="#C3D2E6" stroke-width="1.5"/>`;
+  s+=`<text x="243" y="253" text-anchor="middle" font-size="11" fill="#5A6578">공부 시간 (시간)</text>`;
+  s+=`<text x="16" y="118" text-anchor="middle" font-size="11" fill="#5A6578" transform="rotate(-90 16 118)">시험 점수</text>`;
+  for(let h=1;h<=8;h++) s+=`<text x="${rx(h)}" y="233" text-anchor="middle" font-size="9.5" fill="#96A2B8">${h}</text>`;
+  [0,25,50,75,100].forEach(v=>{ s+=`<text x="38" y="${ry(v)+4}" text-anchor="end" font-size="9" fill="#96A2B8">${v}</text>`; s+=`<line x1="45" y1="${ry(v)}" x2="440" y2="${ry(v)}" stroke="#EAF0F8" stroke-width="1"/>`; });
+  const y1=ry(b), y2=ry(a*9+b);
+  s+=`<line x1="${rx(0)}" y1="${y1}" x2="${rx(9)}" y2="${y2}" stroke="#1B4FA0" stroke-width="2.5"/>`;
+  let loss=0;
+  REG_DATA.forEach(([h,sc])=>{
+    const p=a*h+b, e=sc-p; loss+=e*e;
+    s+=`<line x1="${rx(h)}" y1="${ry(sc)}" x2="${rx(h)}" y2="${ry(p)}" stroke="#E36262" stroke-width="1.6" stroke-dasharray="3 2"/>`;
+    s+=`<circle cx="${rx(h)}" cy="${ry(sc)}" r="5" fill="#F2A93B" stroke="#B07514" stroke-width="1.5"/>`;
+  });
+  loss=loss/REG_DATA.length;
+  regSvg.innerHTML=s;
+  const el=document.getElementById('regLoss');
+  let msg;
+  if(loss<12) msg='🎉 훌륭합니다! 기계가 찾은 답과 거의 같아요';
+  else if(loss<40) msg='👍 꽤 좋아요. 조금만 더 조정해 보세요';
+  else if(loss<150) msg='🙂 방향은 맞습니다. 계속 줄여보세요';
+  else msg='😅 빨간 점선(오차)이 짧아지도록 옮겨보세요';
+  el.innerHTML=`평균 오차(작을수록 좋음) : <b style="font-family:var(--mono);font-size:18px">${loss.toFixed(1)}</b> &nbsp; ${msg}`;
+}
+document.getElementById('regA').addEventListener('input',regDraw);
+document.getElementById('regB').addEventListener('input',regDraw);
+function regAuto(){
+  let a=parseFloat(document.getElementById('regA').value);
+  let b=parseFloat(document.getElementById('regB').value);
+  const steps=160, lr=0.012;
+  let i=0;
+  const timer=setInterval(()=>{
+    let ga=0, gb=0;
+    REG_DATA.forEach(([h,s])=>{ const e=(a*h+b)-s; ga+=2*e*h; gb+=2*e; });
+    ga/=REG_DATA.length; gb/=REG_DATA.length;
+    a-=lr*ga; b-=lr*gb*10;
+    a=Math.max(0,Math.min(16,a)); b=Math.max(0,Math.min(60,b));
+    document.getElementById('regA').value=a.toFixed(1);
+    document.getElementById('regB').value=b.toFixed(0);
+    regDraw();
+    if(++i>=steps){ clearInterval(timer); showToast('기계가 찾은 답: a≈8.4, b≈26.6'); }
+  },16);
+}
+function regReset(){ document.getElementById('regA').value=3; document.getElementById('regB').value=10; regDraw(); }
+regDraw();
+
+/* ══════════ 3차시 · 미니 텍스트 분류기 (나이브 베이즈) ══════════ */
+let simModel=null;
+function grams(t){
+  const s=' '+t.replace(/\s+/g,' ').trim()+' ';
+  const out=[];
+  for(let n=2;n<=3;n++) for(let i=0;i+n<=s.length;i++) out.push(s.substr(i,n));
+  return out;
+}
+function simTrain(){
+  const A=document.getElementById('trainA').value.split('\n').map(s=>s.trim()).filter(Boolean);
+  const B=document.getElementById('trainB').value.split('\n').map(s=>s.trim()).filter(Boolean);
+  if(A.length<2||B.length<2){ showToast('각 레이블에 2개 이상 넣어주세요'); return; }
+  const cnt={A:{},B:{}}, tot={A:0,B:0}, vocab=new Set();
+  const feed=(arr,k)=>arr.forEach(t=>grams(t).forEach(g=>{
+    cnt[k][g]=(cnt[k][g]||0)+1; tot[k]++; vocab.add(g);
+  }));
+  feed(A,'A'); feed(B,'B');
+  simModel={cnt,tot,V:vocab.size,nA:A.length,nB:B.length};
+  document.getElementById('simRes').innerHTML=
+    `✅ 학습 완료! (레이블A ${A.length}개 · 레이블B ${B.length}개 · 특징 ${vocab.size}종)<br>
+     <span style="font-size:13.5px;font-weight:600;color:var(--sub)">아래에 <b>훈련에 넣지 않은</b> 새 문장을 입력해 보세요.</span>`;
+  document.getElementById('simBar').style.width='0%';
+  showToast('모델 훈련 완료 🎓');
+}
+function simTest(){
+  if(!simModel){ showToast('먼저 훈련시켜 주세요'); return; }
+  const q=document.getElementById('simQ').value.trim();
+  if(!q){ showToast('문장을 입력해 주세요'); return; }
+  const {cnt,tot,V,nA,nB}=simModel;
+  let lA=Math.log(nA/(nA+nB)), lB=Math.log(nB/(nA+nB));
+  grams(q).forEach(g=>{
+    lA+=Math.log(((cnt.A[g]||0)+1)/(tot.A+V));
+    lB+=Math.log(((cnt.B[g]||0)+1)/(tot.B+V));
+  });
+  const m=Math.max(lA,lB);
+  const pA=Math.exp(lA-m), pB=Math.exp(lB-m);
+  const conf=Math.max(pA,pB)/(pA+pB);
+  const win=pA>pB?'A':'B';
+  const name=win==='A'?document.getElementById('labA').textContent:document.getElementById('labB').textContent;
+  const color=win==='A'?'var(--teal)':'#C0392B';
+  const icon=win==='A'?'😊':'😢';
+  const low=conf<0.65;
+  document.getElementById('simRes').innerHTML=
+    `${icon} 판정 : <b style="color:${color};font-size:19px">${name}</b>
+     <span style="font-size:13.5px;color:var(--sub)"> · 확신도 ${(conf*100).toFixed(0)}%</span>
+     ${low?'<br><span style="font-size:13.5px;color:#B07514;font-weight:700">🤔 확신도가 낮습니다 — 배우지 않은 유형일 수 있어요</span>':''}`;
+  document.getElementById('simBar').style.width=(conf*100)+'%';
+}
+
+/* ══════════ 4차시 · 픽셀 그림판 + 합성곱 ══════════ */
+let PIX=Array.from({length:8},()=>Array(8).fill(0));
+let painting=false;
+const SAMPLE0=[[0,0,5,13,9,1,0,0],[0,0,13,15,10,15,5,0],[0,3,15,2,0,11,8,0],
+               [0,4,12,0,0,8,8,0],[0,5,8,0,0,9,8,0],[0,4,11,0,1,12,7,0],
+               [0,2,14,5,10,12,0,0],[0,0,6,13,10,0,0,0]];
+function pixShade(v){ const g=Math.round(255-(v/16)*235); return `rgb(${g},${g},${g})`; }
+function pixBuild(){
+  const grid=document.getElementById('pixGrid'); grid.innerHTML='';
+  for(let r=0;r<8;r++) for(let c=0;c<8;c++){
+    const d=document.createElement('div'); d.className='px'; d.dataset.r=r; d.dataset.c=c;
+    d.addEventListener('mousedown',e=>{painting=true;pixPaint(r,c);e.preventDefault();});
+    d.addEventListener('mouseenter',()=>{ if(painting) pixPaint(r,c); });
+    d.addEventListener('touchstart',e=>{painting=true;pixPaint(r,c);e.preventDefault();},{passive:false});
+    grid.appendChild(d);
+  }
+  document.addEventListener('mouseup',()=>painting=false);
+  document.addEventListener('touchend',()=>painting=false);
+  pixRender();
+}
+function pixPaint(r,c){
+  PIX[r][c]=16;
+  for(const [dr,dc] of [[-1,0],[1,0],[0,-1],[0,1]]){
+    const nr=r+dr, nc=c+dc;
+    if(nr>=0&&nr<8&&nc>=0&&nc<8) PIX[nr][nc]=Math.max(PIX[nr][nc],7);
+  }
+  pixRender();
+}
+function pixRender(){
+  const cells=document.getElementById('pixGrid').children;
+  const src=document.getElementById('convSrc'); src.innerHTML='';
+  for(let r=0;r<8;r++) for(let c=0;c<8;c++){
+    cells[r*8+c].style.background=pixShade(PIX[r][c]);
+    const d=document.createElement('div'); d.className='px';
+    d.style.background=pixShade(PIX[r][c]); d.style.cursor='default';
+    src.appendChild(d);
+  }
+  let txt='';
+  for(let r=0;r<8;r++) txt+=PIX[r].map(v=>String(v).padStart(3,' ')).join('')+'\n';
+  document.getElementById('pixMat').textContent=txt;
+}
+function pixClear(){ PIX=Array.from({length:8},()=>Array(8).fill(0)); pixRender();
+  document.getElementById('convOut').innerHTML='';
+  document.getElementById('convDesc').textContent='위 그림판에서 그림을 그린 뒤 버튼을 눌러보세요.'; }
+function pixSample(quiet){ PIX=SAMPLE0.map(r=>r.slice()); pixRender(); if(quiet!==true) showToast('실제 데이터셋의 숫자 0을 불러왔습니다'); }
+const KERNELS={
+  v:{k:[[-1,0,1],[-1,0,1],[-1,0,1]],d:'세로 경계 검출 — 왼쪽 테두리는 <b>양수(파랑)</b>, 오른쪽 테두리는 <b>음수(빨강)</b>로 나타납니다.'},
+  h:{k:[[-1,-1,-1],[0,0,0],[1,1,1]],d:'가로 경계 검출 — 위쪽 테두리와 아래쪽 테두리가 서로 반대 부호로 나타납니다.'},
+  b:{k:[[1/9,1/9,1/9],[1/9,1/9,1/9],[1/9,1/9,1/9]],d:'블러(평균) — 주변 9칸의 평균을 냅니다. 경계가 뭉개지고 부드러워집니다.'}
+};
+function applyConv(type){
+  const {k,d}=KERNELS[type];
+  const out=[];
+  let maxAbs=1;
+  for(let r=0;r<6;r++){ out.push([]);
+    for(let c=0;c<6;c++){
+      let s=0;
+      for(let i=0;i<3;i++) for(let j=0;j<3;j++) s+=PIX[r+i][c+j]*k[i][j];
+      out[r].push(s); maxAbs=Math.max(maxAbs,Math.abs(s));
+    }
+  }
+  const el=document.getElementById('convOut'); el.innerHTML='';
+  for(let r=0;r<6;r++) for(let c=0;c<6;c++){
+    const v=out[r][c], t=Math.min(1,Math.abs(v)/maxAbs);
+    const d2=document.createElement('div'); d2.className='cv';
+    d2.style.background = v>=0 ? `rgba(27,79,160,${0.12+t*0.85})` : `rgba(227,98,98,${0.12+t*0.85})`;
+    d2.textContent=Math.round(v);
+    d2.style.color = t>0.45 ? '#fff' : '#1C2434';
+    el.appendChild(d2);
+  }
+  document.getElementById('convDesc').innerHTML=d;
+}
+pixBuild(); pixSample(true);
+
+/* ══════════ 6차시 · 미니 언어모델 (n-gram) ══════════ */
+const NG_TEXT=`옛날 옛적에 작은 마을에 지혜로운 할머니가 살았어요
+할머니는 매일 아침 마을 사람들에게 이야기를 들려주었어요
+마을 사람들은 할머니의 이야기를 좋아했어요
+어느 날 할머니가 마을을 떠났어요
+마을 사람들은 할머니를 그리워했어요
+그래서 사람들은 서로에게 이야기를 들려주기 시작했어요`;
+const NG_TABLE={};
+(function(){
+  const w=NG_TEXT.split(/\s+/).filter(Boolean);
+  for(let i=0;i<w.length-1;i++){
+    (NG_TABLE[w[i]]=NG_TABLE[w[i]]||[]).push(w[i+1]);
+  }
+})();
+let ngSeq=['마을'];
+function ngRender(){
+  const o=document.getElementById('ngOut');
+  o.innerHTML=ngSeq.map((w,i)=>i===ngSeq.length-1?`<span class="pick">${w}</span>`:w).join(' ')+
+    ' <span style="color:#8FB0DF">▍</span>';
+  const last=ngSeq[ngSeq.length-1];
+  const nxt=NG_TABLE[last];
+  const box=document.getElementById('ngCands'); box.innerHTML='';
+  if(!nxt){
+    box.innerHTML='<div style="font-size:14px;color:#C0392B;font-weight:700">🛑 학습 데이터에 이 단어 다음이 없습니다 — 문장이 끝났습니다. (모델은 배운 것 밖으로 나갈 수 없습니다)</div>';
+    return;
+  }
+  const c={}; nxt.forEach(w=>c[w]=(c[w]||0)+1);
+  Object.entries(c).sort((a,b)=>b[1]-a[1]).forEach(([w,n])=>{
+    const b=document.createElement('button'); b.className='cand';
+    b.innerHTML=`${w} <b>${Math.round(n/nxt.length*100)}%</b>`;
+    b.onclick=()=>{ ngSeq.push(w); ngRender(); };
+    box.appendChild(b);
+  });
+}
+function ngAuto(){
+  let i=0;
+  const t=setInterval(()=>{
+    const last=ngSeq[ngSeq.length-1], nxt=NG_TABLE[last];
+    if(!nxt||i++>14){ clearInterval(t); ngRender(); return; }
+    ngSeq.push(nxt[Math.floor(Math.random()*nxt.length)]);
+    ngRender();
+  },420);
+}
+function ngReset(){ ngSeq=['마을']; ngRender(); }
+ngRender();
+
+/* ══════════ 7차시 · 기획 워크시트 ══════════ */
+function wsGen(){
+  const g=id=>document.getElementById(id).value.trim();
+  const name=g('wsName')||'(프로젝트 이름 미입력)';
+  const prob=g('wsProb')||'(해결할 문제 미입력)';
+  const type=g('wsType'), tool=g('wsTool');
+  const labels=g('wsLabels')||'(레이블 미입력)';
+  const cnt=g('wsCount')||'15';
+  const act=g('wsAction')||'(판별 후 동작 미입력)';
+  const labArr=labels.split(',').map(s=>s.trim()).filter(Boolean);
+  const prompt=
+`너는 AI 교육 프로젝트를 지도하는 멘토야. 아래 기획을 검토하고 데이터를 만들어줘.
+
+[프로젝트] ${name}
+[해결할 문제] ${prob}
+[데이터 종류] ${type}
+[레이블] ${labels}
+[레이블당 데이터] ${cnt}개
+[판별 후 동작] ${act}
+[제작 도구] ${tool}
+
+다음 순서로 답해줘.
+1. 이 레이블 설계의 문제점 점검
+   - 서로 겹치는 레이블이 있는가?
+   - 빠진 경우("기타")를 처리할 수 있는가?
+   - 사람 3명이 같은 기준으로 분류할 수 있는가?
+2. 각 레이블마다 훈련용 예시 ${cnt}개를 표로 제시
+   - 표현을 최대한 다양하게 (반말/존댓말, 짧은 문장/긴 문장, 오타 포함)
+   - 레이블별 개수를 똑같이 맞춰줘
+3. 훈련에 쓰지 않을 "평가용" 예시를 레이블마다 3개씩 별도로
+4. 이 모델이 자주 틀릴 것 같은 어려운 사례 5개와 그 이유
+5. ${tool}(으)로 만들 때의 구현 순서를 5단계로
+
+한국어로, 표는 마크다운 표로 정리해줘.`;
+  document.getElementById('wsOut').innerHTML=
+   `<div class="note" style="margin-top:0"><b>📋 기획 요약</b><br>
+     <b>${name}</b> — ${type} 분류 · 레이블 ${labArr.length}개(${labels}) · 레이블당 ${cnt}개 · ${tool}로 제작<br>
+     <span style="font-size:13px;color:var(--sub)">총 필요 데이터 : 약 ${labArr.length*parseInt(cnt||15)}개</span></div>
+    <div class="pbox"><div class="pbox-head"><span>🤖 AI에게 보낼 프롬프트 — 복사해서 ChatGPT·Claude에 붙여넣으세요</span>
+    <button class="copy-btn" onclick="copyPrompt(this)">📋 복사</button></div><pre>${prompt.replace(/</g,'&lt;')}</pre></div>`;
+  showToast('기획서와 프롬프트가 생성되었습니다 ✓');
+}
+
+/* ══════════ 체크리스트 ══════════ */
+const CHK7=[
+ ["프로젝트 이름과 해결할 문제를 한 문장으로 정했다",""],
+ ["레이블을 2~4개로 정했고, 서로 겹치지 않는다",""],
+ ['"기타" 레이블을 넣어 애매한 입력에 대비했다',"권장"],
+ ["레이블당 데이터를 10개 이상 모았다",""],
+ ["레이블 간 데이터 개수가 비슷하다",""],
+ ["ML4K(또는 파이썬)에서 모델 훈련을 완료했다",""],
+ ["훈련에 쓰지 않은 데이터 5개로 테스트하고 기록했다",""],
+ ["틀린 유형의 데이터를 추가해 재훈련했다",""]
+];
+const CHK8=[
+ ["인공지능·머신러닝·딥러닝의 포함 관계를 설명할 수 있다","1차시"],
+ ["규칙 기반과 학습 기반의 차이를 예로 들 수 있다","1차시"],
+ ["지도·비지도·강화학습을 구분할 수 있다","2차시"],
+ ["훈련/시험 데이터를 나누는 이유와 과적합을 설명할 수 있다","2차시"],
+ ["ML4K에서 텍스트 모델을 훈련시켜 스크래치와 연결했다","3차시"],
+ ["파이썬에서 fit / predict로 모델을 만들어 봤다","3차시"],
+ ["이미지가 숫자 격자임을 설명하고 픽셀 값을 읽을 수 있다","4차시"],
+ ["합성곱 필터가 경계를 찾는 원리를 설명할 수 있다","4차시"],
+ ["이미지 분류 모델을 훈련시키고 성능을 개선해 봤다","5차시"],
+ ["생성형 AI가 다음 단어를 확률로 예측함을 설명할 수 있다","6차시"],
+ ["환각의 원인을 알고 확인 습관을 갖게 되었다","6차시"],
+ ["나만의 AI 프로젝트를 기획하고 완성했다","7·8차시"]
+];
+function buildChk(listId,barId,labId,items,key){
+  const wrap=document.getElementById(listId);
+  items.forEach(([t,d],i)=>{
+    const el=document.createElement('label'); el.className='chk';
+    el.innerHTML=`<input type="checkbox"><span><span class="chk-t">${t}</span>${d?`<span class="chk-d"> · ${d}</span>`:''}</span>`;
+    const box=el.querySelector('input');
+    box.addEventListener('change',()=>{ el.classList.toggle('on',box.checked); upd(); });
+    wrap.appendChild(el);
+  });
+  function upd(){
+    const all=wrap.querySelectorAll('input');
+    const n=[...all].filter(x=>x.checked).length;
+    document.getElementById(barId).style.width=(n/all.length*100)+'%';
+    let msg='';
+    if(key==='c8'){
+      if(n===all.length) msg=' 🏆 완주! 8시간을 온전히 소화하셨습니다';
+      else if(n>=10) msg=' 🎉 목표 달성! (10개 이상)';
+      else if(n>=6) msg=' 👍 절반 이상 — 안 된 항목의 탭을 다시 열어보세요';
+    } else {
+      if(n===all.length) msg=' ✅ 8차시로 넘어갈 준비가 되었습니다';
+    }
+    document.getElementById(labId).innerHTML=`${n} / ${all.length} 완료${msg}`;
+  }
+  upd();
+}
+buildChk('chk7','chk7bar','chk7lab',CHK7,'c7');
+buildChk('chk8','chk8bar','chk8lab',CHK8,'c8');
+
+/* ══════════ 확인 문제 ══════════ */
+const QUIZZES={
+ q1:[
+  {q:"인공지능·머신러닝·딥러닝의 관계로 옳은 것은?",o:["세 가지는 서로 다른 별개의 기술이다","인공지능 ⊃ 머신러닝 ⊃ 딥러닝 순서로 포함된다","딥러닝 ⊃ 머신러닝 ⊃ 인공지능 순서로 포함된다","머신러닝과 딥러닝은 같은 말이다"],a:1,
+   e:"마트료시카처럼 포개진 관계입니다. 가장 큰 개념이 인공지능이고, 그 안에 머신러닝, 다시 그 안에 딥러닝이 있습니다."},
+  {q:"'인공지능(Artificial Intelligence)'이라는 용어가 처음 공식적으로 쓰인 자리는?",o:["1950년 튜링의 논문","1956년 다트머스 회의","1997년 딥블루 대국","2016년 알파고 대국"],a:1,
+   e:"1956년 존 매카시가 연 다트머스 여름 워크숍에서 처음 사용되었습니다. AI의 공식 생일로 봅니다."},
+  {q:"1980년대 전문가 시스템이 실패한 근본 원인은?",o:["컴퓨터가 너무 비쌌기 때문","규칙을 사람이 계속 손으로 고쳐야 해서 유지가 불가능했기 때문","인터넷이 없었기 때문","프로그래머가 부족했기 때문"],a:1,
+   e:"규칙 기반의 한계입니다. 예외 상황이 무한히 생기는데 그때마다 사람이 규칙을 추가해야 했습니다. 이 자리를 머신러닝이 대체했습니다."},
+  {q:"오늘 AI 붐의 실질적 출발점으로 꼽히는 2012년의 사건은?",o:["ChatGPT 공개","알파고의 승리","ImageNet 대회에서 AlexNet(딥러닝)이 오류율을 크게 낮춤","트랜스포머 논문 발표"],a:2,
+   e:"AlexNet이 오류율을 26%→16%로 낮추며 딥러닝 시대를 열었습니다. GPU·빅데이터·신경망이 만난 순간입니다."}
+ ],
+ q2:[
+  {q:"머신러닝을 전통 프로그래밍과 비교할 때 가장 정확한 설명은?",o:["전통: 데이터+규칙→답 / 머신러닝: 데이터+답→규칙","둘 다 사람이 규칙을 직접 쓴다","머신러닝은 데이터가 필요 없다","머신러닝은 항상 100% 정확하다"],a:0,
+   e:"입력과 출력이 뒤바뀝니다. 사람은 예시와 정답만 주고, 규칙은 기계가 찾습니다."},
+  {q:"훈련 데이터로 성능을 평가하면 안 되는 이유는?",o:["계산이 오래 걸려서","답안지를 보고 시험 치는 것과 같아 진짜 실력을 알 수 없어서","데이터가 손상되어서","법으로 금지되어 있어서"],a:1,
+   e:"그래서 데이터를 훈련용 70~80% / 시험용 20~30%로 나눕니다. 자랑해야 할 숫자는 시험 정확도입니다."},
+  {q:"훈련 정확도 100%, 시험 정확도 86%인 모델의 상태는?",o:["완벽한 모델이다","과적합(overfitting)","과소적합(underfitting)","데이터가 너무 많다"],a:1,
+   e:"기출문제만 외운 수험생과 같습니다. 해결책은 데이터를 더 모으거나 모델을 덜 복잡하게 만드는 것입니다."},
+  {q:"정답 레이블 없이 비슷한 것끼리 스스로 묶는 학습 방식은?",o:["지도학습","비지도학습","강화학습","전이학습"],a:1,
+   e:"K-평균 군집화가 대표적입니다. 기계는 구조를 찾고, 그룹에 이름을 붙이는 의미 부여는 사람의 몫입니다."}
+ ],
+ q3:[
+  {q:"ML4K의 프로젝트 진행 3단계 순서로 옳은 것은?",o:["만들기 → 훈련 → 평가","훈련 → 학습&평가 → 만들기","평가 → 훈련 → 만들기","훈련 → 만들기 → 평가"],a:1,
+   e:"레이블에 데이터를 넣고(훈련) → 모델을 학습시켜 테스트하고(학습&평가) → 스크래치·파이썬으로 프로그램을 만듭니다(만들기)."},
+  {q:"레이블 '칭찬'에 15개, '불평'에 3개의 데이터를 넣고 훈련하면?",o:["더 정확해진다","대부분의 입력을 '칭찬'으로 판정하는 편향이 생긴다","훈련이 실패한다","아무 영향이 없다"],a:1,
+   e:"데이터 불균형 문제입니다. 레이블 간 개수를 비슷하게 맞추는 것이 기본입니다."},
+  {q:"훈련에 없던 '오늘 점심 뭐 먹지'를 넣으면 칭찬/불평 모델은?",o:["'모르겠다'고 답한다","둘 중 하나를 억지로 고른다","오류가 난다","자동으로 새 레이블을 만든다"],a:1,
+   e:"모델은 배운 상자 안에서만 답합니다. 그래서 '기타' 레이블을 만들거나 확신도가 낮으면 답하지 않게 설계해야 합니다."},
+  {q:"스크래치의 [새로운 머신러닝 모델 훈련시키기]에 해당하는 파이썬 코드는?",o:["model.predict(X)","model.fit(X, y)","print(X)","import sklearn"],a:1,
+   e:"fit이 곧 학습입니다. 예측은 predict, 확신도는 predict_proba입니다."}
+ ],
+ q4:[
+  {q:"컴퓨터에게 컬러 사진 한 장은 무엇인가?",o:["그림 파일 하나","0~255 값을 가진 픽셀 숫자들의 3차원 배열(R·G·B)","글자들의 모음","압축된 소리 데이터"],a:1,
+   e:"224×224 컬러 사진은 224×224×3 = 150,528개의 숫자입니다. 컴퓨터는 그림이 아니라 숫자만 봅니다."},
+  {q:"합성곱(convolution)이 하는 일은?",o:["이미지 크기를 키운다","작은 필터를 밀면서 곱하고 더해 경계·무늬 같은 특징을 찾는다","색을 흑백으로 바꾼다","파일을 압축한다"],a:1,
+   e:"어두운 방을 손전등으로 훑는 것과 같습니다. 필터 모양에 따라 세로선·가로선 등이 두드러집니다."},
+  {q:"CNN에서 필터(커널)의 값은 누가 정하나?",o:["개발자가 하나하나 직접 정한다","학습을 통해 기계가 스스로 찾아낸다","항상 고정된 표준값을 쓴다","무작위로 두고 바꾸지 않는다"],a:1,
+   e:"이것이 딥러닝의 핵심입니다. '무엇을 봐야 하는지'까지 기계가 학습합니다."},
+  {q:"풀링(pooling) 층의 역할로 옳은 것은?",o:["이미지를 컬러로 바꾼다","크기를 줄여 계산량을 낮추고 위치 변화에 견디게 한다","레이블을 추가한다","학습 속도를 느리게 한다"],a:1,
+   e:"'눈이 정확히 몇 픽셀에 있는가'보다 '눈이 있다'가 중요합니다. 그래서 요약하고 줄입니다."}
+ ],
+ q5:[
+  {q:"흰 벽 앞에서만 손 사진을 찍어 학습시킨 모델이 다른 배경에서 틀리는 이유는?",o:["카메라 성능이 나빠서","모델이 손이 아니라 배경을 함께 외웠기 때문","조명이 밝아서","데이터가 너무 많아서"],a:1,
+   e:"모델은 '무엇이 정답과 함께 나타나는가'를 학습합니다. 다양한 배경·조명·각도의 데이터를 넣어야 합니다."},
+  {q:"이미지 분류 성능을 올리는 가장 효과적인 방법은?",o:["더 비싼 컴퓨터를 산다","다양한 조건의 데이터를 더 모은다","레이블 이름을 바꾼다","사진을 흑백으로 바꾼다"],a:1,
+   e:"실제 AI 프로젝트 시간의 70~80%가 데이터 준비에 쓰입니다. 모델보다 데이터가 성능을 만듭니다."},
+  {q:"손이 없을 때 AI가 억지로 가위/바위/보 중 하나를 고르는 것을 막으려면?",o:["레이블을 늘린다","'없음(배경만)' 레이블을 추가하고 확신도 기준을 둔다","훈련을 더 오래 한다","사진을 크게 찍는다"],a:1,
+   e:"'기타/없음' 레이블 + 확신도 임계값이 실무 표준 설계입니다."},
+  {q:"AI가 9를 3으로, 7을 9로 틀렸을 때 가장 먼저 할 일은?",o:["모델을 버리고 다시 만든다","틀린 사례를 모아 왜 헷갈리는지 살펴본다","정확도 숫자만 보고 넘어간다","데이터를 줄인다"],a:1,
+   e:"틀린 사례가 개선 방향을 알려줍니다. 정확도 숫자 하나보다 무엇을 틀렸는지가 더 많은 것을 말해줍니다."}
+ ],
+ q6:[
+  {q:"대형 언어모델(ChatGPT·Claude)의 기본 작동 원리는?",o:["문장의 의미를 논리적으로 이해하고 추론한다","지금까지의 문맥 다음에 올 토큰을 확률로 예측하는 것을 반복한다","인터넷을 실시간으로 검색해 그대로 옮긴다","미리 저장된 답변에서 골라 보여준다"],a:1,
+   e:"'다음 단어 맞히기'의 반복입니다. 규모가 커지면서 마치 이해한 것처럼 보이는 결과가 나옵니다."},
+  {q:"AI 환각(hallucination)이 생기는 근본 이유는?",o:["AI가 거짓말을 하려는 의도가 있어서","'참인 문장'이 아니라 '그럴듯한 문장'을 만들도록 학습되었기 때문","인터넷 연결이 끊겨서","사용자가 질문을 잘못해서"],a:1,
+   e:"사실 여부를 스스로 판별할 수단이 없습니다. 그래서 숫자·날짜·인용은 반드시 사람이 확인해야 합니다."},
+  {q:"환각을 줄이는 방법으로 적절하지 않은 것은?",o:["관련 자료를 첨부하고 '문서 안에서만 답하라'고 지시","'모르면 모른다고 답하라'고 명시","출처를 요구하고 직접 확인","답변이 길고 자세하면 사실로 믿는다"],a:3,
+   e:"길고 자세할수록 그럴듯해 보일 뿐, 정확도와는 무관합니다. 오히려 유창한 답일수록 검증이 필요합니다."},
+  {q:"프롬프트 4원칙에 해당하지 않는 것은?",o:["역할을 준다","맥락을 준다","형식을 지정한다","최대한 짧게 한 단어로 묻는다"],a:3,
+   e:"역할·맥락·형식·예시가 4원칙입니다. 짧게 묻는 것이 아니라 구체적으로 알려주는 것이 핵심입니다."}
+ ],
+ qf:[
+  {q:"오늘 실습에서 '학습'에 해당하는 파이썬 코드 한 줄은?",o:["print(X)","model.fit(X, y)","import numpy","plt.show()"],a:1,
+   e:"데이터 준비 → fit → predict. 오늘 나온 모든 머신러닝 코드가 이 세 박자였습니다."},
+  {q:"머신러닝에서 자랑해야 할 정확도는?",o:["훈련 정확도","시험(테스트) 정확도","두 정확도의 합","가장 높은 쪽"],a:1,
+   e:"훈련 정확도는 답안지를 보고 친 시험 점수입니다. 한 번도 안 본 데이터에서의 점수가 진짜 실력입니다."},
+  {q:"이미지가 컴퓨터에게 무엇인지 가장 정확히 말한 것은?",o:["픽셀마다 밝기·색을 나타내는 숫자들의 배열","벡터 그래픽 도형의 모음","글자로 된 설명","압축 알고리즘"],a:0,
+   e:"4차시 픽셀 그림판에서 직접 확인했습니다. 사람이 보는 그림 = 컴퓨터가 보는 숫자 표입니다."},
+  {q:"데이터가 한쪽 집단에 치우칠 때 생기는 문제는?",o:["학습 속도가 느려진다","모델이 그 편향을 그대로 학습해 특정 집단에서 성능이 떨어진다","파일 용량이 커진다","아무 문제 없다"],a:1,
+   e:"AI는 데이터에 있는 차별을 그대로 배웁니다. 그래서 '누가 만든 데이터인가'를 항상 물어야 합니다."},
+  {q:"확신도(정확도) 임계값을 두는 이유는?",o:["계산을 빠르게 하려고","확신이 낮을 때 억지 판정 대신 '모르겠다'고 답하게 하려고","정확도를 높여 보이게 하려고","레이블을 줄이려고","",""],a:1,
+   e:"모른다고 답할 줄 아는 AI가 아무 말이나 지어내는 AI보다 좋은 AI입니다. 환각 대응의 기본 원리이기도 합니다."},
+  {q:"생성형 AI와 판별형 AI의 가장 큰 차이는?",o:["속도","주어진 것 중에서 고르느냐, 없던 것을 새로 만드느냐","가격","사용 언어"],a:1,
+   e:"3~5차시가 판별형(분류), 6차시가 생성형입니다. 생성형은 답이 무한하므로 평가 기준도 주관적입니다."},
+  {q:"내 프로젝트에서 '기타' 레이블을 만드는 이유는?",o:["레이블 개수를 채우려고","어느 레이블에도 속하지 않는 입력을 처리하기 위해","훈련 시간을 늘리려고","정확도를 낮추려고"],a:1,
+   e:"3차시에서 '오늘 점심 뭐 먹지'가 억지로 분류됐던 문제의 해결책입니다."},
+  {q:"오늘 배운 내용을 한 문장으로 요약하면?",o:["AI는 만능이므로 모든 판단을 맡기면 된다","AI는 데이터에서 패턴을 배우며, 언제 틀리는지 아는 것이 잘 쓰는 것이다","AI는 코딩 전문가만 만들 수 있다","AI는 규칙을 사람이 다 써줘야 작동한다"],a:1,
+   e:"AI를 잘 쓰는 사람은 많이 아는 사람이 아니라, 한계를 아는 사람입니다. 8시간 동안 그것을 배우셨습니다."}
+ ]
+};
+document.querySelectorAll('.quiz').forEach(el=>{
+  const key=el.dataset.quiz;
+  const items=QUIZZES[key];
+  const state={i:0,score:0};
+  render();
+  function render(){
+    if(state.i>=items.length){
+      const pct=Math.round(state.score/items.length*100);
+      let msg = pct===100?'🏆 만점입니다!':pct>=75?'🎉 잘하셨습니다!':pct>=50?'👍 절반 이상 맞히셨어요':'📖 위 내용을 다시 한 번 보시면 좋겠습니다';
+      el.innerHTML=`<div class="qz"><div class="qz-result">
+        <h3>${state.score} / ${items.length} 정답</h3><p>${msg}</p>
+        <button class="btn ghost" data-again>↺ 다시 풀기</button></div></div>`;
+      el.querySelector('[data-again]').onclick=()=>{state.i=0;state.score=0;render();};
+      return;
+    }
+    const it=items[state.i];
+    const dots=items.map((_,i)=>`<span class="qz-dot ${i===state.i?'cur':(i<state.i?'ok':'')}"></span>`).join('');
+    el.innerHTML=`<div class="qz"><div class="qz-progress">${dots}</div>
+      <div class="qz-q">${state.i+1}. ${it.q}</div>
+      <div class="qz-opts">${it.o.filter(Boolean).map((o,i)=>`<button class="qz-opt" data-i="${i}">${o}</button>`).join('')}</div>
+      <div class="qz-exp" style="display:none;margin-top:14px" ></div></div>`;
+    el.querySelectorAll('.qz-opt').forEach(btn=>{
+      btn.onclick=()=>{
+        const i=+btn.dataset.i;
+        el.querySelectorAll('.qz-opt').forEach((b,j)=>{
+          b.disabled=true;
+          if(j===it.a) b.classList.add('right');
+          else if(j===i) b.classList.add('wrong');
+        });
+        if(i===it.a) state.score++;
+        const exp=el.querySelector('.qz-exp');
+        exp.style.display='block';
+        exp.className='qz-exp '+(i===it.a?'tip':'note');
+        exp.innerHTML=`<b>${i===it.a?'✅ 정답':'💡 해설'}</b> — ${it.e}
+          <div style="text-align:right;margin-top:10px"><button class="btn ghost" style="padding:8px 18px;font-size:13.5px" data-next>${state.i+1===items.length?'결과 보기 →':'다음 문제 →'}</button></div>`;
+        exp.querySelector('[data-next]').onclick=()=>{state.i++;render();};
+      };
+    });
+  }
+});
+</script>
+</body>
+</html>
